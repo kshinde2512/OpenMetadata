@@ -190,17 +190,17 @@ public class DashboardDetailsPageTest {
     openExplorePage();
     Events.click(webDriver, dashboardDetails.dashboard());
     Events.click(webDriver, common.selectTableLink(3));
-    Thread.sleep(waitTime);
+    Thread.sleep(2000);
     Events.click(webDriver, dashboardDetails.addChartTag());
     for (int i = 0; i < 3; i++) {
       Events.sendKeys(webDriver, common.enterAssociatedTagName(), "P");
       Events.click(webDriver, common.tagListItem());
-      Thread.sleep(waitTime);
+      Thread.sleep(2000);
     }
     Events.click(webDriver, common.saveAssociatedTag());
     Thread.sleep(2000);
     webDriver.navigate().refresh();
-    Thread.sleep(waitTime);
+    Thread.sleep(2000);
     Object tagCount = webDriver.findElements(dashboardDetails.chartTags()).size();
     Assert.assertEquals(tagCount, 3);
   }
