@@ -76,7 +76,3 @@ module.exports = (on, config) => {
 
   return config;
 };
-
-module.exports = {
-  CYPRESS_RECORD_KEY: '3f35beb4-626b-4904-a8ee-f50463b83d23',
-};
