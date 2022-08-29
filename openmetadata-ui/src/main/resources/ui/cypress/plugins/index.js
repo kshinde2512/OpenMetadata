@@ -62,7 +62,8 @@ module.exports = (on, config) => {
   // Kafka
   config.env.kafkaBootstrapServers =
     process.env.CYPRESS_KAFKA_BOOTSTRAP_SERVERS;
-  config.env.kafkaSchemaRegistryUrl = process.env.CYPRESS_KAFKA_SCHEMA_REGISTRY_URL;
+  config.env.kafkaSchemaRegistryUrl =
+    process.env.CYPRESS_KAFKA_SCHEMA_REGISTRY_URL;
 
   // Glue
   config.env.glueAwsAccessKeyId = process.env.CYPRESS_GLUE_ACCESS_KEY;
@@ -75,3 +76,7 @@ module.exports = (on, config) => {
 
   return config;
 };
+
+module.exports = defineConfig({
+  CYPRESS_RECORD_KEY: '3f35beb4-626b-4904-a8ee-f50463b83d23',
+});
