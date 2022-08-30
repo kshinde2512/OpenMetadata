@@ -68,6 +68,7 @@ jobs:
           wait-on: 'http://localhost:8585'
           browser: chrome
         env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           CYPRESS_SNOWFLAKE_USERNAME: ${{ secrets.CYPRESS_SNOWFLAKE_USERNAME }}
           CYPRESS_SNOWFLAKE_PASSWORD: ${{ secrets.CYPRESS_SNOWFLAKE_PASSWORD }}
           CYPRESS_SNOWFLAKE_ACCOUNT: ${{ secrets.CYPRESS_SNOWFLAKE_ACCOUNT }}
