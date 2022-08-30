@@ -73,7 +73,6 @@ module.exports = (on, config) => {
   config.env.glueStorageServiceName = process.env.CYPRESS_GLUE_STORAGE_SERVICE;
   config.env.gluePipelineServiceName =
     process.env.CYPRESS_GLUE_PIPELINE_SERVICE;
-  config.env.cypressRecordKey = process.env.CYPRESS_RECORD_KEY
 
   return config;
 };
