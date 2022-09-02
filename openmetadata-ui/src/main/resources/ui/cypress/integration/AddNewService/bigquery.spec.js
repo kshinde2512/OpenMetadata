@@ -17,7 +17,7 @@ import { SERVICE_TYPE } from '../../constants/constants';
 const serviceType = 'BigQuery';
 const serviceName = `${serviceType}-ct-test-${uuid()}`;
 
-describe('BigQuery Ingestion', () => {
+describe.skip('BigQuery Ingestion', () => {
   it('add and ingest data', () => {
     goToAddNewServicePage(SERVICE_TYPE.Database);
     const connectionInput = () => {
