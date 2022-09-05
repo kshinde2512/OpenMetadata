@@ -17,7 +17,7 @@ import { SERVICE_TYPE } from '../../constants/constants';
 const serviceType = 'Metabase';
 const serviceName = `${serviceType}-ct-test-${uuid()}`;
 
-describe.skip('Metabase Ingestion', () => {
+describe('Metabase Ingestion', () => {
   it('add and ingest data', () => {
     goToAddNewServicePage(SERVICE_TYPE.Dashboard);
 

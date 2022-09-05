@@ -17,7 +17,7 @@ import { SERVICE_TYPE } from '../../constants/constants';
 const serviceType = 'Redshift';
 const serviceName = `${serviceType}-ct-test-${uuid()}`;
 
-describe.skip('RedShift Ingestion', () => {
+describe('RedShift Ingestion', () => {
   it('add and ingest data', () => {
     goToAddNewServicePage(SERVICE_TYPE.Database);
     const connectionInput = () => {

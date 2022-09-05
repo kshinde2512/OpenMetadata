@@ -17,7 +17,7 @@ import { SERVICE_TYPE } from '../../constants/constants';
 const serviceType = 'Glue';
 const serviceName = `${serviceType}-ct-test-${uuid()}`;
 
-describe.skip('Glue Ingestion', () => {
+describe('Glue Ingestion', () => {
   it('add and ingest data', () => {
     goToAddNewServicePage(SERVICE_TYPE.Database);
     const connectionInput = () => {

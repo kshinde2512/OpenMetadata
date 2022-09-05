@@ -17,7 +17,7 @@ import { SERVICE_TYPE } from '../../constants/constants';
 const serviceType = 'Mysql';
 const serviceName = `${serviceType}-ct-test-${uuid()}`;
 
-describe.skip('MySQL Ingestion', () => {
+describe('MySQL Ingestion', () => {
   it('add and ingest data', () => {
     goToAddNewServicePage(SERVICE_TYPE.Database);
     const connectionInput = () => {

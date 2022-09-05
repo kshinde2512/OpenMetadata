@@ -17,7 +17,7 @@ import { SERVICE_TYPE } from '../../constants/constants';
 const serviceType = 'Kafka';
 const serviceName = `${serviceType}-ct-test-${uuid()}`;
 
-describe.skip('Kafka Ingestion', () => {
+describe('Kafka Ingestion', () => {
   it('add and ingest data', () => {
     goToAddNewServicePage(SERVICE_TYPE.Messaging);
 

@@ -17,7 +17,7 @@ import { SERVICE_TYPE } from '../../constants/constants';
 const serviceType = 'Superset';
 const serviceName = `${serviceType}-ct-test-${uuid()}`;
 
-describe.skip('Superset Ingestion', () => {
+describe('Superset Ingestion', () => {
   it('add and ingest data', () => {
     goToAddNewServicePage(SERVICE_TYPE.Dashboard);
 
