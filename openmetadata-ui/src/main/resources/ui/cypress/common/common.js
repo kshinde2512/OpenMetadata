@@ -217,16 +217,26 @@ export const deleteCreatedService = (typeOfService, service_Name) => {
     .should('be.visible')
     .type('DELETE');
 
+  interceptURL(
+    'DELETE',
+    '/api/v1/services/databaseServices/*',
+    'deleteService'
+  );
   interceptURL('GET', '/api/v1/*', 'homePage');
-
+  interceptURL('GET', '/api/v1/config/sandbox', 'homepageSandbox');
+  interceptURL('GET', '/api/v1/util/entities/count', 'homepageCount');
   cy.get('[data-testid="confirm-button"]').should('be.visible').click();
-
+  verifyResponseStatusCode('@deleteService', 200);
   cy.get('.Toastify__toast-body')
-    .should('exist')
     .should('be.visible')
-    .should('have.text', `${typeOfService} Service deleted successfully!`);
-  cy.url().should('eq', 'http://localhost:8585/my-data');
+    .contains(`${typeOfService} Service deleted successfully!`);
+
+  cy.get('.Toastify__close-button').should('be.visible').click();
+  verifyResponseStatusCode('@homepageSandbox', 200);
+  verifyResponseStatusCode('@homepageCount', 200);
   verifyResponseStatusCode('@homePage', 200);
+
+  cy.url().should('eq', 'http://localhost:8585/my-data');
   //Checking if the service got deleted successfully
   //Click on settings page
   cy.get('[data-testid="appbar-item-settings"]').should('be.visible').click();
