@@ -30,6 +30,12 @@ export const verifyResponseStatusCode = (alias, responseCode) => {
   cy.wait(alias).its('response.statusCode').should('eq', responseCode);
 };
 
+export const verifyResponseStatusCodeforServices = (alias, responseCode) => {
+  cy.wait(alias, { timeout: 10000 })
+    .its('response.statusCode')
+    .should('eq', responseCode);
+};
+
 export const handleIngestionRetry = (type, testIngestionButton, count = 0) => {
   // ingestions page
   const retryTimes = 25;
@@ -218,13 +224,13 @@ export const deleteCreatedService = (typeOfService, service_Name) => {
     .type('DELETE');
 
   cy.get('[data-testid="confirm-button"]').should('be.visible').click();
-  verifyResponseStatusCode('@deleteService', 200);
+  verifyResponseStatusCodeforServices('@deleteService', 200);
   cy.get('.Toastify__toast-body')
     .should('be.visible')
     .contains(`${typeOfService} Service deleted successfully!`);
 
   cy.get('.Toastify__close-button').should('be.visible').click();
-  
+
   cy.url().should('eq', 'http://localhost:8585/my-data');
   //Checking if the service got deleted successfully
   //Click on settings page
@@ -649,7 +655,7 @@ export const addCustomPropertiesForEntity = (entityType, customType, value) => {
     } else if (
       $body.find(
         '.toastui-editor-md-container > .toastui-editor > .ProseMirror'
-      )
+      ).length > 0
     ) {
       cy.get('.toastui-editor-md-container > .toastui-editor > .ProseMirror')
         .should('be.visible')
