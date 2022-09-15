@@ -212,19 +212,11 @@ export const deleteCreatedService = (typeOfService, service_Name) => {
     .contains(service_Name)
     .should('be.visible')
     .click();
-
+  interceptURL('DELETE', '/api/v1/services/*', 'deleteService');
   cy.get('[data-testid="confirmation-text-input"]')
     .should('be.visible')
     .type('DELETE');
 
-  interceptURL(
-    'DELETE',
-    '/api/v1/services/*',
-    'deleteService'
-  );
-  interceptURL('GET', '/api/v1/*', 'homePage');
-  interceptURL('GET', '/api/v1/config/sandbox', 'homepageSandbox');
-  interceptURL('GET', '/api/v1/util/entities/count', 'homepageCount');
   cy.get('[data-testid="confirm-button"]').should('be.visible').click();
   verifyResponseStatusCode('@deleteService', 200);
   cy.get('.Toastify__toast-body')
@@ -232,10 +224,7 @@ export const deleteCreatedService = (typeOfService, service_Name) => {
     .contains(`${typeOfService} Service deleted successfully!`);
 
   cy.get('.Toastify__close-button').should('be.visible').click();
-  verifyResponseStatusCode('@homepageSandbox', 200);
-  verifyResponseStatusCode('@homepageCount', 200);
-  verifyResponseStatusCode('@homePage', 200);
-
+  
   cy.url().should('eq', 'http://localhost:8585/my-data');
   //Checking if the service got deleted successfully
   //Click on settings page
@@ -654,7 +643,9 @@ export const addCustomPropertiesForEntity = (entityType, customType, value) => {
   cy.get('body').then(($body) => {
     if ($body.find('[data-testid="value-input"]').length > 0) {
       cy.get('[data-testid="value-input"]').should('be.visible').type(value);
+      interceptURL('PATCH', '/api/v1/*/*', 'editValue');
       cy.get('[data-testid="save-value"]').click();
+      verifyResponseStatusCode('@editValue', 200);
     } else if (
       $body.find(
         '.toastui-editor-md-container > .toastui-editor > .ProseMirror'
@@ -663,16 +654,14 @@ export const addCustomPropertiesForEntity = (entityType, customType, value) => {
       cy.get('.toastui-editor-md-container > .toastui-editor > .ProseMirror')
         .should('be.visible')
         .type(value);
+      interceptURL('PATCH', '/api/v1/*/*', 'editValue');
       cy.get('[data-testid="save"]').click();
+      verifyResponseStatusCode('@editValue', 200);
     }
   });
 
   //Checking the added value to the property
-  cy.get('[data-testid="data-row"]')
-    .contains(propertyName)
-    .scrollIntoView()
-    .next('td')
-    .as('value');
+  cy.get('[data-testid="value"]').as('value');
 
   cy.get('@value').should('contain', value);
 
