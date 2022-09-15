@@ -219,7 +219,7 @@ export const deleteCreatedService = (typeOfService, service_Name) => {
 
   interceptURL(
     'DELETE',
-    '/api/v1/services/databaseServices/*',
+    '/api/v1/services/*',
     'deleteService'
   );
   interceptURL('GET', '/api/v1/*', 'homePage');
