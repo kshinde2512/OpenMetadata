@@ -188,3 +188,10 @@ export const ENTITIES = {
     markdownValue: 'This is markdown value',
   },
 };
+
+export const DELETE_SERVICE = {
+  databaseServices: 'databaseServices',
+  messagingServices: 'messagingServices',
+  pipelineServices: 'pipelineServices',
+  dashboardServiecs: 'dashboardServices',
+};

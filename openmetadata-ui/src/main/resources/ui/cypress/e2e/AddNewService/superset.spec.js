@@ -12,7 +12,7 @@
  */
 
 import { deleteCreatedService, editOwnerforCreatedService, goToAddNewServicePage, testServiceCreationAndIngestion, uuid } from '../../common/common';
-import { SERVICE_TYPE } from '../../constants/constants';
+import { DELETE_SERVICE, SERVICE_TYPE } from '../../constants/constants';
 
 const serviceType = 'Superset';
 const serviceName = `${serviceType}-ct-test-${uuid()}`;
@@ -54,6 +54,10 @@ describe('Superset Ingestion', () => {
   });
 
   it('delete created service', () => {
-    deleteCreatedService(SERVICE_TYPE.Dashboard, serviceName);
+    deleteCreatedService(
+      SERVICE_TYPE.Dashboard,
+      serviceName,
+      DELETE_SERVICE.dashboardServiecs
+    );
   });
 });

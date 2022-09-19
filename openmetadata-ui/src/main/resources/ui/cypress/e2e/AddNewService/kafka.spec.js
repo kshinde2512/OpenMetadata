@@ -12,7 +12,7 @@
  */
 
 import { deleteCreatedService, editOwnerforCreatedService, goToAddNewServicePage, testServiceCreationAndIngestion, uuid } from '../../common/common';
-import { SERVICE_TYPE } from '../../constants/constants';
+import { DELETE_SERVICE, SERVICE_TYPE } from '../../constants/constants';
 
 const serviceType = 'Kafka';
 const serviceName = `${serviceType}-ct-test-${uuid()}`;
@@ -34,8 +34,12 @@ describe('Kafka Ingestion', () => {
     };
 
     const addIngestionInput = () => {
-        cy.get('[data-testid="topic-filter-pattern-checkbox"]').should("be.visible").check()
-        cy.get('[data-testid="filter-pattern-includes-topic"]').should("be.visible").type("__consumer_offsets")
+      cy.get('[data-testid="topic-filter-pattern-checkbox"]')
+        .should('be.visible')
+        .check();
+      cy.get('[data-testid="filter-pattern-includes-topic"]')
+        .should('be.visible')
+        .type('__consumer_offsets');
     };
 
     testServiceCreationAndIngestion(
@@ -48,10 +52,18 @@ describe('Kafka Ingestion', () => {
   });
 
   it('Edit and validate owner', () => {
-    editOwnerforCreatedService(SERVICE_TYPE.Messaging, serviceName);
+    editOwnerforCreatedService(
+      SERVICE_TYPE.Messaging,
+      serviceName,
+      DELETE_SERVICE.topicServices
+    );
   });
 
   it('delete created service', () => {
-    deleteCreatedService(SERVICE_TYPE.Messaging, serviceName);
+    deleteCreatedService(
+      SERVICE_TYPE.Messaging,
+      serviceName,
+      DELETE_SERVICE.messagingServices
+    );
   });
 });

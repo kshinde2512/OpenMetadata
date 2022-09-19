@@ -12,6 +12,7 @@
  */
 
 /// <reference types="cypress" />
+
 export const descriptionBox =
   '.toastui-editor-md-container > .toastui-editor > .ProseMirror';
 export const uuid = () => Cypress._.random(0, 1e6);
@@ -176,7 +177,11 @@ export const testServiceCreationAndIngestion = (
   handleIngestionRetry(type, testIngestionButton);
 };
 
-export const deleteCreatedService = (typeOfService, service_Name) => {
+export const deleteCreatedService = (
+  typeOfService,
+  service_Name,
+  deleteService
+) => {
   cy.goToHomePage();
 
   //Click on settings page
@@ -218,11 +223,15 @@ export const deleteCreatedService = (typeOfService, service_Name) => {
     .contains(service_Name)
     .should('be.visible')
     .click();
-  interceptURL('DELETE', '/api/v1/services/*', 'deleteService');
+
   cy.get('[data-testid="confirmation-text-input"]')
     .should('be.visible')
     .type('DELETE');
-
+  interceptURL(
+    'DELETE',
+    `/api/v1/services/${deleteService}/*`,
+    'deleteService'
+  );
   cy.get('[data-testid="confirm-button"]').should('be.visible').click();
   verifyResponseStatusCodeforServices('@deleteService', 200);
   cy.get('.Toastify__toast-body')
