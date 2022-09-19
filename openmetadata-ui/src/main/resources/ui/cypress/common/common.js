@@ -676,9 +676,17 @@ export const addCustomPropertiesForEntity = (entityType, customType, value) => {
   });
 
   //Checking the added value to the property
-  cy.get('[data-testid="value"]').as('value');
+  cy.get('body').then(($body) => {
+    if ($body.find('[data-testid="value"]').length > 0) {
+      cy.get('[data-testid="value"]').as('value');
 
-  cy.get('@value').should('contain', value);
+      cy.get('@value').should('contain', value);
+    } else if ($body.find('[data-testid="markdown-parser"]').length > 0) {
+      cy.get('[data-testid="markdown-parser"]').as('value');
+
+      cy.get('@value').should('contain', value);
+    }
+  });
 
   //returning the property name since it needs to be deleted and updated
   return propertyName;
