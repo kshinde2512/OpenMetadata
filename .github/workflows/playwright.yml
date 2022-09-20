@@ -40,7 +40,7 @@ jobs:
       - name: 'Run Playwright tests'
         run: 'yarn playwright test'
         wait-on: 'http://localhost:8585'
-        working-directory: openmetadata-ui/src/main/resources/ui/tests
+        working-directory: openmetadata-ui/src/main/resources/ui
       - if: always()
         uses: actions/upload-artifact@v2
         with:
