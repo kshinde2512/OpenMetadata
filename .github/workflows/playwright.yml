@@ -41,7 +41,7 @@ jobs:
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
     - name: Run Playwright tests
-      working-directory: openmetadata-ui/src/main/resources/ui/
+      working-directory: openmetadata-ui/src/main/resources/ui/tests
       wait-on: 'http://localhost:8585'
       run: yarn playwright test
     - uses: actions/upload-artifact@v2
