@@ -2,8 +2,8 @@ name: Playwright Tests
 on:
   push:
     branches: [main]
-    paths: openmetadata-ui/src/main/resources/ui/**
-      - 
+    paths: 
+      - openmetadata-ui/src/main/resources/ui/**
     paths-ignore:
       - 'openmetadata-docs/**'
   pull_request_target:
