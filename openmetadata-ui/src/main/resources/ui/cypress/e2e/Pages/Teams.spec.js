@@ -202,7 +202,7 @@ describe('Teams flow should work properly', () => {
     interceptURL('PATCH', 'api/v1/teams/*', 'saveTeamName');
     interceptURL(
       'GET',
-      `api/v1/users?fields=teams,roles&team=${TEAM_DETAILS.name}&limit=*`,
+      `api/v1/users?fields=teams,roles&team=${TEAM_DETAILS.name}&limit=15`,
       'getTeam'
     );
     //Save the updated display name
