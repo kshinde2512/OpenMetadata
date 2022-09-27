@@ -171,7 +171,6 @@ describe('Data Quality and Profiler should work properly', () => {
     cy.get('[data-testid="view-service-button"]')
       .should('be.visible')
       .click({ force: true });
-
     verifyResponseStatusCode('@testCase', 200);
     cy.contains(`${TEAM_ENTITY}_${NEW_TABLE_TEST_CASE.type}`).should(
       'be.visible'

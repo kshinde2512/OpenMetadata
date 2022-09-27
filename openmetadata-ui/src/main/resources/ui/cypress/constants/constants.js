@@ -211,6 +211,13 @@ export const ENTITIES = {
   },
 };
 
+export const DELETE_SERVICE = {
+  databaseServices: 'databaseServices',
+  messagingServices: 'messagingServices',
+  pipelineServices: 'pipelineServices',
+  dashboardServiecs: 'dashboardServices',
+}
+
 export const LOGIN = {
   username: 'admin@openmetadata.org',
   password: 'admin',

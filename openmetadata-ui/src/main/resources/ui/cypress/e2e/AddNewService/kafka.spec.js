@@ -12,7 +12,7 @@
  */
 
 import { deleteCreatedService, editOwnerforCreatedService, goToAddNewServicePage, login, testServiceCreationAndIngestion, uuid } from '../../common/common';
-import { LOGIN, SERVICE_TYPE } from '../../constants/constants';
+import { DELETE_SERVICE, LOGIN, SERVICE_TYPE } from '../../constants/constants';
 
 const serviceType = 'Kafka';
 const serviceName = `${serviceType}-ct-test-${uuid()}`;
@@ -56,10 +56,18 @@ describe('Kafka Ingestion', () => {
   });
 
   it('Edit and validate owner', () => {
-    editOwnerforCreatedService(SERVICE_TYPE.Messaging, serviceName);
+    editOwnerforCreatedService(
+      SERVICE_TYPE.Messaging,
+      serviceName,
+      DELETE_SERVICE.topicServices
+    );
   });
 
   it('delete created service', () => {
-    deleteCreatedService(SERVICE_TYPE.Messaging, serviceName);
+    deleteCreatedService(
+      SERVICE_TYPE.Messaging,
+      serviceName,
+      DELETE_SERVICE.messagingServices
+    );
   });
 });

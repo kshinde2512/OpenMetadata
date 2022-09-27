@@ -41,6 +41,12 @@ export const verifyResponseStatusCode = (alias, responseCode) => {
   cy.wait(alias).its('response.statusCode').should('eq', responseCode);
 };
 
+export const verifyResponseStatusCodeforServices = (alias, responseCode) => {
+  cy.wait(alias, { timeout: 10000 })
+    .its('response.statusCode')
+    .should('eq', responseCode);
+};
+
 export const handleIngestionRetry = (
   type,
   testIngestionButton,
@@ -246,20 +252,18 @@ export const deleteCreatedService = (typeOfService, service_Name) => {
     .type('DELETE');
   interceptURL(
     'DELETE',
-    '/api/v1/services/*/*?hardDelete=true&recursive=true',
+    `/api/v1/services/${deleteService}/*`,
     'deleteService'
   );
-  interceptURL(
-    'GET',
-    '/api/v1/services/*/name/*?fields=owner',
-    'serviceDetails'
-  );
-
   cy.get('[data-testid="confirm-button"]').should('be.visible').click();
-  verifyResponseStatusCode('@deleteService', 200);
-  cy.reload();
-  verifyResponseStatusCode('@serviceDetails', 404);
-  cy.contains(`instance for ${service_Name} not found`);
+  verifyResponseStatusCodeforServices('@deleteService', 200);
+  cy.get('.Toastify__toast-body')
+    .should('be.visible')
+    .contains(`${typeOfService} Service deleted successfully!`);
+
+  cy.get('.Toastify__close-button').should('be.visible').click();
+
+  cy.url().should('eq', 'http://localhost:8585/my-data');
   //Checking if the service got deleted successfully
   //Click on settings page
   cy.get('[data-testid="appbar-item-settings"]').should('be.visible').click();
@@ -673,16 +677,20 @@ export const addCustomPropertiesForEntity = (entityType, customType, value) => {
   cy.get('body').then(($body) => {
     if ($body.find('[data-testid="value-input"]').length > 0) {
       cy.get('[data-testid="value-input"]').should('be.visible').type(value);
+      interceptURL('PATCH', '/api/v1/*/*', 'editValue');
       cy.get('[data-testid="save-value"]').click();
+      verifyResponseStatusCode('@editValue', 200);
     } else if (
       $body.find(
         '.toastui-editor-md-container > .toastui-editor > .ProseMirror'
-      )
+      ).length > 0
     ) {
       cy.get('.toastui-editor-md-container > .toastui-editor > .ProseMirror')
         .should('be.visible')
         .type(value);
+      interceptURL('PATCH', '/api/v1/*/*', 'editValue');
       cy.get('[data-testid="save"]').click();
+      verifyResponseStatusCode('@editValue', 200);
     }
   });
 

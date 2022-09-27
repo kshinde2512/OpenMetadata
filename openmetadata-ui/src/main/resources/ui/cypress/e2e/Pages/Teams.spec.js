@@ -185,9 +185,11 @@ describe('Teams flow should work properly', () => {
     });
     verifyResponseStatusCode('@saveTeamName', 200);
     verifyResponseStatusCode('@getTeam', 200);
-
-    //Click on edit description button
-    cy.get('[data-testid="edit-description"]').should('be.visible').click();
+    // Click on edit description button
+    cy.get('[data-testid="edit-description"]')
+      .should('exist')
+      .should('be.visible')
+      .click();
 
     //Entering updated description
     cy.get(descriptionBox).clear().type(updateddescription);
