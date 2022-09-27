@@ -13,8 +13,8 @@
 
 /// <reference types="cypress" />
 
-import { descriptionBox, goToAddNewServicePage, handleIngestionRetry, interceptURL, scheduleIngestion, searchEntity, testServiceCreationAndIngestion, uuid, verifyResponseStatusCode } from '../../common/common';
-import { DELETE_TERM, NEW_COLUMN_TEST_CASE, NEW_TABLE_TEST_CASE, NEW_TEST_SUITE, SERVICE_TYPE, TEAM_ENTITY } from '../../constants/constants';
+import { deleteCreatedService, descriptionBox, goToAddNewServicePage, handleIngestionRetry, interceptURL, login, mySqlConnectionInput, scheduleIngestion, searchEntity, testServiceCreationAndIngestion, uuid, verifyResponseStatusCode } from '../../common/common';
+import { DELETE_TERM, LOGIN, NEW_COLUMN_TEST_CASE, NEW_TABLE_TEST_CASE, NEW_TEST_SUITE, SERVICE_TYPE, TEAM_ENTITY } from '../../constants/constants';
 
 const serviceType = 'Mysql';
 const serviceName = `${serviceType}-ct-test-${uuid()}`;
@@ -40,30 +40,27 @@ const goToProfilerTab = () => {
 
 describe('Data Quality and Profiler should work properly', () => {
   it('Add and ingest mysql data', () => {
+    login(LOGIN.username, LOGIN.password);
+    cy.goToHomePage();
     goToAddNewServicePage(SERVICE_TYPE.Database);
-    const connectionInput = () => {
-      cy.get('#root_username').type('openmetadata_user');
-      cy.get('#root_password').type('openmetadata_password');
-      cy.get('#root_hostPort').type('mysql:3306');
-      cy.get('#root_databaseSchema').type('openmetadata_db');
-    };
 
     const addIngestionInput = () => {
       cy.get('[data-testid="schema-filter-pattern-checkbox"]').check();
       cy.get('[data-testid="filter-pattern-includes-schema"]')
         .should('be.visible')
-        .type('openmetadata_db');
+        .type(Cypress.env('mysqlDatabaseSchema'));
     };
 
     testServiceCreationAndIngestion(
       serviceType,
-      connectionInput,
+      mySqlConnectionInput,
       addIngestionInput,
       serviceName
     );
   });
 
   it('Add Profiler ingestion', () => {
+    login(LOGIN.username, LOGIN.password);
     cy.goToHomePage();
     searchEntity(TEAM_ENTITY);
     goToProfilerTab();
@@ -118,8 +115,8 @@ describe('Data Quality and Profiler should work properly', () => {
   });
 
   it('Add table test case with new test suite', () => {
+    login(LOGIN.username, LOGIN.password);
     cy.goToHomePage();
-
     searchEntity(TEAM_ENTITY);
     goToProfilerTab();
 
@@ -182,8 +179,8 @@ describe('Data Quality and Profiler should work properly', () => {
 
   it('Edit Test Case should work properly', () => {
     const testName = `${TEAM_ENTITY}_${NEW_TABLE_TEST_CASE.type}`;
+    login(LOGIN.username, LOGIN.password);
     cy.goToHomePage();
-
     searchEntity(TEAM_ENTITY);
     goToProfilerTab();
 
@@ -248,6 +245,7 @@ describe('Data Quality and Profiler should work properly', () => {
   });
 
   it('Add Column test case should work properly', () => {
+    login(LOGIN.username, LOGIN.password);
     cy.goToHomePage();
     searchEntity(TEAM_ENTITY);
     goToProfilerTab();
@@ -300,6 +298,7 @@ describe('Data Quality and Profiler should work properly', () => {
   });
 
   it('Edit column test case should work properly', () => {
+    login(LOGIN.username, LOGIN.password);
     cy.goToHomePage();
     searchEntity(TEAM_ENTITY);
     interceptURL('GET', '/api/v1/testCase?*', 'testCase');
@@ -327,6 +326,7 @@ describe('Data Quality and Profiler should work properly', () => {
   });
 
   it('Delete Column Test Case should work properly', () => {
+    login(LOGIN.username, LOGIN.password);
     cy.goToHomePage();
     searchEntity(TEAM_ENTITY);
     interceptURL('GET', '/api/v1/testCase?*', 'testCase');
@@ -362,6 +362,7 @@ describe('Data Quality and Profiler should work properly', () => {
   });
 
   it('Delete Test suite should work properly', () => {
+    login(LOGIN.username, LOGIN.password);
     cy.goToHomePage();
     cy.get('[data-testid="appbar-item-settings"]').should('be.visible').click();
     cy.get('[data-testid="global-setting-left-panel"]')
@@ -392,5 +393,11 @@ describe('Data Quality and Profiler should work properly', () => {
       .contains('Test Suite deleted successfully!')
       .should('be.visible')
       .wait(200);
+  });
+
+  it('delete created service', () => {
+    login(LOGIN.username, LOGIN.password);
+    cy.goToHomePage();
+    deleteCreatedService(SERVICE_TYPE.Database, serviceName);
   });
 });

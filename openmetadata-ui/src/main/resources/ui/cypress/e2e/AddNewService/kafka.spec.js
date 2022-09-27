@@ -11,13 +11,17 @@
  *  limitations under the License.
  */
 
-import { deleteCreatedService, editOwnerforCreatedService, goToAddNewServicePage, testServiceCreationAndIngestion, uuid } from '../../common/common';
-import { DELETE_SERVICE, SERVICE_TYPE } from '../../constants/constants';
+import { deleteCreatedService, editOwnerforCreatedService, goToAddNewServicePage, login, testServiceCreationAndIngestion, uuid } from '../../common/common';
+import { DELETE_SERVICE, LOGIN, SERVICE_TYPE } from '../../constants/constants';
 
 const serviceType = 'Kafka';
 const serviceName = `${serviceType}-ct-test-${uuid()}`;
 
 describe('Kafka Ingestion', () => {
+  beforeEach(() => {
+    login(LOGIN.username, LOGIN.password);
+    cy.goToHomePage();
+  });
   it('add and ingest data', () => {
     goToAddNewServicePage(SERVICE_TYPE.Messaging);
 

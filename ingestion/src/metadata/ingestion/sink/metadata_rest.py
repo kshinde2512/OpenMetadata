@@ -27,7 +27,6 @@ from metadata.generated.schema.api.data.createTableProfile import (
     CreateTableProfileRequest,
 )
 from metadata.generated.schema.api.lineage.addLineage import AddLineageRequest
-from metadata.generated.schema.api.policies.createPolicy import CreatePolicyRequest
 from metadata.generated.schema.api.teams.createRole import CreateRoleRequest
 from metadata.generated.schema.api.teams.createTeam import CreateTeamRequest
 from metadata.generated.schema.api.teams.createUser import CreateUserRequest
@@ -457,7 +456,7 @@ class MetadataRestSink(Sink[Entity]):
             for role in record.roles:
                 try:
                     role_entity = self.metadata.get_by_name(
-                        entity=Role, fqn=str(role.name.__root__)
+                        entity=Role, fqn=str(role.name.__root__.__root__)
                     )
                 except APIError:
                     role_entity = self._create_role(role)

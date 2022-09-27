@@ -19,7 +19,17 @@ export const uuid = () => Cypress._.random(0, 1e6);
 
 const AARON_JOHNSON = 'Aaron Johnson';
 
+const TEAM_TYPES = ['BusinessUnit', 'Department', 'Division', 'Group'];
+
 const isDatabaseService = (type) => type === 'database';
+
+const checkTeamTypeOptions = () => {
+  for (const teamType of TEAM_TYPES) {
+    cy.get(`.ant-select-dropdown [title="${teamType}"]`)
+      .should('exist')
+      .should('be.visible');
+  }
+};
 
 //intercepting URL with cy.intercept
 export const interceptURL = (method, url, alias) => {
@@ -196,13 +206,7 @@ export const testServiceCreationAndIngestion = (
   handleIngestionRetry(type, testIngestionButton);
 };
 
-export const deleteCreatedService = (
-  typeOfService,
-  service_Name,
-  deleteService
-) => {
-  cy.goToHomePage();
-
+export const deleteCreatedService = (typeOfService, service_Name) => {
   //Click on settings page
   cy.get('[data-testid="appbar-item-settings"]').should('be.visible').click();
 
@@ -274,8 +278,6 @@ export const deleteCreatedService = (
 };
 
 export const editOwnerforCreatedService = (service_type, service_Name) => {
-  cy.goToHomePage();
-
   //Click on settings page
   cy.get('[data-testid="appbar-item-settings"]').should('be.visible').click();
 
@@ -330,10 +332,6 @@ export const editOwnerforCreatedService = (service_type, service_Name) => {
 };
 
 export const goToAddNewServicePage = (service_type) => {
-  cy.visit('/');
-  cy.get('[data-testid="WhatsNewModalFeatures"]').should('be.visible');
-  cy.get('[data-testid="closeWhatsNew"]').click();
-  cy.get('[data-testid="WhatsNewModalFeatures"]').should('not.exist');
   cy.get('[data-testid="tables"]').should('be.visible');
 
   //Click on settings page
@@ -703,10 +701,11 @@ export const addCustomPropertiesForEntity = (entityType, customType, value) => {
     .next('td')
     .as('value');
 
-    cy.get('tbody')
+  cy.get('tbody')
     .contains(propertyName)
     .scrollIntoView()
-    .next('td').should('contain', value);
+    .next('td')
+    .should('contain', value);
 
   //returning the property name since it needs to be deleted and updated
   return propertyName;
@@ -772,11 +771,15 @@ export const updateOwner = () => {
     .invoke('text')
     .then((text) => {
       cy.get('[data-testid="hiden-layer"]').should('exist').click();
-      interceptURL('GET', '/api/v1/users/loggedInUser/groupTeams', 'getUser');
+      interceptURL(
+        'GET',
+        '/api/v1/search/query?q=*%20AND%20teamType:Group&from=0&size=10&index=team_search_index',
+        'getTeams'
+      );
       //Clicking on edit owner button
       cy.get('[data-testid="edit-Owner-icon"]').should('be.visible').click();
 
-      verifyResponseStatusCode('@getUser', 200);
+      verifyResponseStatusCode('@getTeams', 200);
 
       //Clicking on users tab
       cy.get('button[data-testid="dropdown-tab"]')
@@ -793,4 +796,70 @@ export const updateOwner = () => {
       //Asserting the added name
       cy.get('[data-testid="owner-link"]').should('contain', text.trim());
     });
+};
+
+export const mySqlConnectionInput = () => {
+  cy.get('#root_username').type(Cypress.env('mysqlUsername'));
+  cy.get('#root_password').type(Cypress.env('mysqlPassword'));
+  cy.get('#root_hostPort').type(Cypress.env('mysqlHostPort'));
+  cy.get('#root_databaseSchema').type(Cypress.env('mysqlDatabaseSchema'));
+};
+
+export const login = (username, password) => {
+  cy.visit('/');
+  cy.get('[id="email"]').should('be.visible').clear().type(username);
+  cy.get('[id="password"]').should('be.visible').clear().type(password);
+  cy.get('.ant-btn').contains('Login').should('be.visible').click();
+};
+
+export const addTeam = (TEAM_DETAILS) => {
+  interceptURL('GET', '/api/v1/teams*', 'addTeam');
+  //Fetching the add button and clicking on it
+  cy.get('button')
+    .find('span')
+    .contains('Add Team')
+    .should('be.visible')
+    .click();
+
+  verifyResponseStatusCode('@addTeam', 200);
+
+  //Entering team details
+  cy.get('[data-testid="name"]')
+    .should('exist')
+    .should('be.visible')
+    .type(TEAM_DETAILS.name);
+
+  cy.get('[data-testid="display-name"]')
+    .should('exist')
+    .should('be.visible')
+    .type(TEAM_DETAILS.displayName);
+
+  cy.get('[data-testid="team-selector"]')
+    .should('exist')
+    .should('be.visible')
+    .click();
+
+  checkTeamTypeOptions();
+
+  cy.get(`.ant-select-dropdown [title="${TEAM_DETAILS.teamType}"]`)
+    .should('exist')
+    .should('be.visible')
+    .click();
+
+  cy.get(descriptionBox)
+    .should('exist')
+    .should('be.visible')
+    .type(TEAM_DETAILS.description);
+
+  interceptURL('POST', '/api/v1/teams', 'saveTeam');
+  interceptURL('GET', '/api/v1/team*', 'createTeam');
+
+  //Saving the created team
+  cy.get('[form="add-team-form"]')
+    .scrollIntoView()
+    .should('be.visible')
+    .click();
+
+  verifyResponseStatusCode('@saveTeam', 201);
+  verifyResponseStatusCode('@createTeam', 200);
 };

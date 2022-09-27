@@ -14,6 +14,12 @@
 @import '~antd/dist/antd.less';
 @import url('./variables.less');
 
+//lg: 24px;
+//md: 16px;
+//sm: 12px;
+//xs: 8px;
+//xss: 4px;
+
 .m-0 {
   margin: 0 !important;
 }
@@ -65,6 +71,9 @@
 .m-r-0 {
   margin-right: 0 !important;
 }
+.m-r-xss {
+  margin-right: @margin-xss;
+}
 .m-r-xs {
   margin-right: @margin-xs;
 }
@@ -98,6 +107,9 @@
 .m-t-xs {
   margin-top: @margin-xs;
 }
+.m--t-xss {
+  margin-top: -@margin-xss;
+}
 .m-t-sm {
   margin-top: @margin-sm;
 }
@@ -121,6 +133,9 @@
 }
 .m-b-lg {
   margin-bottom: @margin-lg;
+}
+.m-b-xlg {
+  margin-bottom: @margin-xlg;
 }
 .m-auto {
   margin: auto;
@@ -179,6 +194,10 @@
 .p-y-md {
   padding-top: @padding-md;
   padding-bottom: @padding-md;
+}
+.p-y-lg {
+  padding-top: @padding-lg;
+  padding-bottom: @padding-lg;
 }
 .p-x-0 {
   padding-right: 0 !important;

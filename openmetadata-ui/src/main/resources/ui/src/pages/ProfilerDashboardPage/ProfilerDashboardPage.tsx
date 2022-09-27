@@ -43,6 +43,7 @@ import {
   getTableFQNFromColumnFQN,
 } from '../../utils/CommonUtils';
 import { DEFAULT_ENTITY_PERMISSION } from '../../utils/PermissionsUtils';
+import { getDecodedFqn } from '../../utils/StringsUtils';
 import { generateEntityLink } from '../../utils/TableUtils';
 import { showErrorToast } from '../../utils/ToastUtils';
 
@@ -52,6 +53,7 @@ const ProfilerDashboardPage = () => {
     dashboardType: ProfilerDashboardType;
     tab: ProfilerDashboardTab;
   }>();
+  const decodedEntityFQN = getDecodedFqn(entityTypeFQN);
   const isColumnView = dashboardType === ProfilerDashboardType.COLUMN;
   const [table, setTable] = useState<Table>({} as Table);
   const [profilerData, setProfilerData] = useState<ColumnProfile[]>([]);
@@ -88,7 +90,6 @@ const ProfilerDashboardPage = () => {
       const { data } = await getColumnProfilerList(fqn, {
         startTs,
         endTs,
-        limit: API_RES_MAX_SIZE,
       });
       setProfilerData(data || []);
     } catch (error) {
@@ -118,14 +119,14 @@ const ProfilerDashboardPage = () => {
   };
 
   const handleTestCaseUpdate = () => {
-    fetchTestCases(generateEntityLink(entityTypeFQN, isColumnView));
+    fetchTestCases(generateEntityLink(decodedEntityFQN, isColumnView));
   };
 
   const fetchTableEntity = async () => {
     try {
       const fqn = isColumnView
-        ? getTableFQNFromColumnFQN(entityTypeFQN)
-        : entityTypeFQN;
+        ? getTableFQNFromColumnFQN(decodedEntityFQN)
+        : decodedEntityFQN;
       const field = `tags, usageSummary, owner, followers${
         isColumnView ? ', profile' : ''
       }`;
@@ -158,10 +159,14 @@ const ProfilerDashboardPage = () => {
   const getProfilerDashboard = (permission: OperationPermission) => {
     if (
       tab === ProfilerDashboardTab.DATA_QUALITY &&
-      (permission.ViewAll || permission.ViewTests)
+      (permission.ViewAll || permission.ViewBasic || permission.ViewTests)
     ) {
-      fetchTestCases(generateEntityLink(entityTypeFQN));
-    } else if (permission.ViewAll || permission.ViewDataProfile) {
+      fetchTestCases(generateEntityLink(decodedEntityFQN));
+    } else if (
+      permission.ViewAll ||
+      permission.ViewBasic ||
+      permission.ViewDataProfile
+    ) {
       fetchProfilerData(entityTypeFQN);
     } else {
       setIsLoading(false);
@@ -169,13 +174,13 @@ const ProfilerDashboardPage = () => {
   };
 
   useEffect(() => {
-    if (entityTypeFQN) {
+    if (decodedEntityFQN) {
       fetchTableEntity();
     } else {
       setIsLoading(false);
       setError(true);
     }
-  }, [entityTypeFQN]);
+  }, [decodedEntityFQN]);
 
   useEffect(() => {
     if (!isEmpty(table)) {
@@ -198,7 +203,9 @@ const ProfilerDashboardPage = () => {
       <ErrorPlaceHolder>
         <p className="tw-text-center">
           No data found{' '}
-          {entityTypeFQN ? `for column ${getNameFromFQN(entityTypeFQN)}` : ''}
+          {decodedEntityFQN
+            ? `for column ${getNameFromFQN(decodedEntityFQN)}`
+            : ''}
         </p>
       </ErrorPlaceHolder>
     );

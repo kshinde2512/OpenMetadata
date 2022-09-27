@@ -73,12 +73,15 @@ import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.openmetadata.schema.api.teams.CreateUser;
 import org.openmetadata.schema.entity.data.Table;
+import org.openmetadata.schema.entity.teams.AuthenticationMechanism;
 import org.openmetadata.schema.entity.teams.Role;
 import org.openmetadata.schema.entity.teams.Team;
 import org.openmetadata.schema.entity.teams.User;
+import org.openmetadata.schema.security.client.GoogleSSOClientConfig;
 import org.openmetadata.schema.teams.authn.GenerateTokenRequest;
 import org.openmetadata.schema.teams.authn.JWTAuthMechanism;
 import org.openmetadata.schema.teams.authn.JWTTokenExpiry;
+import org.openmetadata.schema.teams.authn.SSOAuthMechanism;
 import org.openmetadata.schema.type.ChangeDescription;
 import org.openmetadata.schema.type.EntityReference;
 import org.openmetadata.schema.type.ImageList;
@@ -126,8 +129,9 @@ public class UserResourceTest extends EntityResourceTest<User, CreateUser> {
     USER_TEAM21 = createEntity(create, ADMIN_AUTH_HEADERS);
     USER2_REF = USER2.getEntityReference();
 
-    create = createRequest(BOT_USER_NAME).withIsBot(true);
-    BOT_USER = createEntity(create, ADMIN_AUTH_HEADERS);
+    List<String> userFields = Entity.getEntityFields(User.class);
+    userFields.remove("authenticationMechanism");
+    BOT_USER = getEntityByName(BOT_USER_NAME, String.join(",", userFields), ADMIN_AUTH_HEADERS);
   }
 
   @Test
@@ -177,7 +181,15 @@ public class UserResourceTest extends EntityResourceTest<User, CreateUser> {
     create = createRequest(test, 3).withProfile(PROFILE);
     createAndCheckEntity(create, ADMIN_AUTH_HEADERS);
 
-    create = createRequest(test, 5).withDisplayName("displayName").withProfile(PROFILE).withIsBot(true);
+    create =
+        createRequest(test, 5)
+            .withDisplayName("displayName")
+            .withProfile(PROFILE)
+            .withIsBot(true)
+            .withAuthenticationMechanism(
+                new AuthenticationMechanism()
+                    .withAuthType(AuthenticationMechanism.AuthType.JWT)
+                    .withConfig(new JWTAuthMechanism().withJWTTokenExpiry(JWTTokenExpiry.Unlimited)));
     createAndCheckEntity(create, ADMIN_AUTH_HEADERS);
 
     create = createRequest(test, 6).withDisplayName("displayName").withProfile(PROFILE).withIsAdmin(true);
@@ -192,12 +204,18 @@ public class UserResourceTest extends EntityResourceTest<User, CreateUser> {
 
     // Update the user information using PUT
     String oldEmail = create.getEmail();
-    CreateUser update = create.withEmail("test1@email.com").withDisplayName("displayName1");
+    CreateUser update = create.withEmail("user.xyz@email.com").withDisplayName("displayName1");
 
     ChangeDescription change = getChangeDescription(user.getVersion());
     fieldAdded(change, "displayName", "displayName1");
-    fieldUpdated(change, "email", oldEmail, "test1@email.com");
-    updateAndCheckEntity(update, OK, ADMIN_AUTH_HEADERS, MINOR_UPDATE, change);
+    fieldUpdated(change, "email", oldEmail, "user.xyz@email.com");
+    user = updateAndCheckEntity(update, OK, ADMIN_AUTH_HEADERS, MINOR_UPDATE, change);
+
+    // Update the user information using PUT as the logged-in user
+    update = create.withDisplayName("displayName2");
+    change = getChangeDescription(user.getVersion());
+    fieldUpdated(change, "displayName", "displayName1", "displayName2");
+    updateAndCheckEntity(update, OK, authHeaders("user.xyz@email.com"), MINOR_UPDATE, change);
   }
 
   @Test
@@ -354,11 +372,11 @@ public class UserResourceTest extends EntityResourceTest<User, CreateUser> {
     int initialBotCount = bots.getPaging().getTotal();
 
     // Create 3 bot users
-    CreateUser create = createRequest(test, 0).withIsBot(true);
+    CreateUser create = createBotUserRequest(test, 0);
     User bot0 = createAndCheckEntity(create, ADMIN_AUTH_HEADERS);
-    create = createRequest(test, 1).withIsBot(true);
+    create = createBotUserRequest(test, 1);
     User bot1 = createAndCheckEntity(create, ADMIN_AUTH_HEADERS);
-    create = createRequest(test, 2).withIsBot(true);
+    create = createBotUserRequest(test, 2);
     User bot2 = createAndCheckEntity(create, ADMIN_AUTH_HEADERS);
 
     Predicate<User> isBot0 = u -> u.getId().equals(bot0.getId());
@@ -382,6 +400,15 @@ public class UserResourceTest extends EntityResourceTest<User, CreateUser> {
     // list users (not bots)
     users = listEntities(queryParams, 100_000, null, null, ADMIN_AUTH_HEADERS);
     assertEquals(initialUserCount - initialBotCount, users.getPaging().getTotal());
+  }
+
+  private CreateUser createBotUserRequest(TestInfo test, int index) {
+    return createRequest(test, index)
+        .withIsBot(true)
+        .withAuthenticationMechanism(
+            new AuthenticationMechanism()
+                .withAuthType(AuthenticationMechanism.AuthType.JWT)
+                .withConfig(new JWTAuthMechanism().withJWTTokenExpiry(JWTTokenExpiry.Unlimited)));
   }
 
   @Test
@@ -627,7 +654,14 @@ public class UserResourceTest extends EntityResourceTest<User, CreateUser> {
                 .withName("ingestion-bot-jwt")
                 .withDisplayName("ingestion-bot-jwt")
                 .withEmail("ingestion-bot-jwt@email.com")
-                .withIsBot(true),
+                .withIsBot(true)
+                .withAuthenticationMechanism(
+                    new AuthenticationMechanism()
+                        .withAuthType(AuthenticationMechanism.AuthType.SSO)
+                        .withConfig(
+                            new SSOAuthMechanism()
+                                .withSsoServiceType(SSOAuthMechanism.SsoServiceType.GOOGLE)
+                                .withAuthConfig(new GoogleSSOClientConfig().withSecretKey("/path/to/secret.json")))),
             authHeaders("ingestion-bot-jwt@email.com"));
     TestUtils.put(
         getResource(String.format("users/generateToken/%s", user.getId())),

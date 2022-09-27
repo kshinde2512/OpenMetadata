@@ -37,6 +37,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.openmetadata.common.utils.CommonUtil;
 import org.openmetadata.schema.api.tests.CreateTestDefinition;
 import org.openmetadata.schema.tests.TestDefinition;
+import org.openmetadata.schema.tests.TestPlatform;
+import org.openmetadata.schema.type.ColumnDataType;
 import org.openmetadata.schema.type.EntityHistory;
 import org.openmetadata.schema.type.Include;
 import org.openmetadata.schema.type.TestDefinitionEntityType;
@@ -157,11 +159,25 @@ public class TestDefinitionResource extends EntityResource<TestDefinition, TestD
               description = "Filter by entityType.",
               schema = @Schema(implementation = TestDefinitionEntityType.class))
           @QueryParam("entityType")
-          String entityType)
+          String entityType,
+      @Parameter(description = "Filter by a test platform", schema = @Schema(implementation = TestPlatform.class))
+          @QueryParam("testPlatform")
+          String testPlatformParam,
+      @Parameter(
+              description = "Filter tests definition by supported data type",
+              schema = @Schema(implementation = ColumnDataType.class))
+          @QueryParam("supportedDataType")
+          String supportedDataTypeParam)
       throws IOException {
     ListFilter filter = new ListFilter(include);
     if (entityType != null) {
       filter.addQueryParam("entityType", entityType);
+    }
+    if (testPlatformParam != null) {
+      filter.addQueryParam("testPlatform", testPlatformParam);
+    }
+    if (supportedDataTypeParam != null) {
+      filter.addQueryParam("supportedDataType", supportedDataTypeParam);
     }
     return super.listInternal(uriInfo, securityContext, fieldsParam, filter, limitParam, before, after);
   }
@@ -182,9 +198,9 @@ public class TestDefinitionResource extends EntityResource<TestDefinition, TestD
   public EntityHistory listVersions(
       @Context UriInfo uriInfo,
       @Context SecurityContext securityContext,
-      @Parameter(description = "Test Definition Id", schema = @Schema(type = "string")) @PathParam("id") String id)
+      @Parameter(description = "Test Definition Id", schema = @Schema(type = "string")) @PathParam("id") UUID id)
       throws IOException {
-    return dao.listVersions(id);
+    return super.listVersionsInternal(securityContext, id);
   }
 
   @GET
@@ -281,7 +297,7 @@ public class TestDefinitionResource extends EntityResource<TestDefinition, TestD
           @PathParam("version")
           String version)
       throws IOException {
-    return dao.getVersion(id, version);
+    return super.getVersionInternal(securityContext, id, version);
   }
 
   @POST
@@ -378,6 +394,7 @@ public class TestDefinitionResource extends EntityResource<TestDefinition, TestD
         .withDescription(create.getDescription())
         .withEntityType(create.getEntityType())
         .withTestPlatforms(create.getTestPlatforms())
+        .withSupportedDataTypes(create.getSupportedDataTypes())
         .withDisplayName(create.getDisplayName())
         .withParameterDefinition(create.getParameterDefinition())
         .withName(create.getName());

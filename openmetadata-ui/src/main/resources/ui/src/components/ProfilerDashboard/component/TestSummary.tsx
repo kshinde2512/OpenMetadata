@@ -28,7 +28,6 @@ import {
   YAxis,
 } from 'recharts';
 import { getListTestCaseResults } from '../../../axiosAPIs/testAPI';
-import { API_RES_MAX_SIZE } from '../../../constants/constants';
 import {
   COLORS,
   PROFILER_FILTER_RANGE,
@@ -40,6 +39,7 @@ import {
   TestCaseResult,
   TestCaseStatus,
 } from '../../../generated/tests/testCase';
+import { getEncodedFqn } from '../../../utils/StringsUtils';
 import { showErrorToast } from '../../../utils/ToastUtils';
 import ErrorPlaceHolder from '../../common/error-with-placeholder/ErrorPlaceHolder';
 import RichTextEditorPreviewer from '../../common/rich-text-editor/RichTextEditorPreviewer';
@@ -131,11 +131,10 @@ const TestSummary: React.FC<TestSummaryProps> = ({ data }) => {
         .unix();
       const endTs = moment().unix();
       const { data: chartData } = await getListTestCaseResults(
-        data.fullyQualifiedName || '',
+        getEncodedFqn(data.fullyQualifiedName || ''),
         {
           startTs,
           endTs,
-          limit: API_RES_MAX_SIZE,
         }
       );
       setResults(chartData);
