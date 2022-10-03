@@ -187,9 +187,14 @@ describe('Teams flow should work properly', () => {
     cy.get('[data-testid="team-heading"]').then(($el) => {
       cy.wrap($el).should('have.text', TEAM_DETAILS.updatedname);
     });
-
+    cy.reload();
+    cy.goToHomePage();
+    verifyResponseStatusCode('@getTeam', 200);
     //Click on edit description button
-    cy.get('[data-testid="edit-description"]').should('be.visible').click();
+    cy.get('[data-testid="edit-description"]')
+      .should('exist')
+      .should('be.visible')
+      .click();
 
     //Entering updated description
     cy.get(descriptionBox).clear().type(updateddescription);
