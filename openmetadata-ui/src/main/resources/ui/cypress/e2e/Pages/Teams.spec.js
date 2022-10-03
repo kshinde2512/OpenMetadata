@@ -174,7 +174,7 @@ describe('Teams flow should work properly', () => {
 
     interceptURL(
       'GET',
-      `api/v1/users?fields=teams,roles&team=${TEAM_DETAILS.name}&limit=15`,
+      `/api/v1/users?fields=teams,roles&team=${TEAM_DETAILS.name}&limit=15`,
       'getTeam'
     );
     //Save the updated display name
