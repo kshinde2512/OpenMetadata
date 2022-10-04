@@ -181,10 +181,9 @@ public class UserResource extends EntityResource<User, UserRepository> {
         ConfigurationHolder.getInstance()
             .getConfig(ConfigurationHolder.ConfigurationType.AUTHENTICATION_CONFIG, AuthenticationConfiguration.class)
             .getProvider();
-    this.isEmailServiceEnabled =
-        ConfigurationHolder.getInstance()
-            .getConfig(ConfigurationType.SMTP_CONFIG, SmtpSettings.class)
-            .getEnableSmtpServer();
+    SmtpSettings smtpSettings =
+        ConfigurationHolder.getInstance().getConfig(ConfigurationType.SMTP_CONFIG, SmtpSettings.class);
+    this.isEmailServiceEnabled = smtpSettings != null && smtpSettings.getEnableSmtpServer();
     this.loginAttemptCache = new LoginAttemptCache();
   }
 
@@ -798,14 +797,14 @@ public class UserResource extends EntityResource<User, UserRepository> {
           sendEmailVerification(uriInfo, registeredUser);
         } catch (Exception e) {
           LOG.error("Error in sending mail to the User : {}", e.getMessage());
-          return Response.status(424).entity(new ErrorMessage(424, EMAIL_SENDING_ISSUE)).build();
+          return Response.status(424, EMAIL_SENDING_ISSUE).build();
         }
       }
-      return Response.status(Response.Status.CREATED).entity("User Registration Successful.").build();
-    } else {
-      return Response.status(Response.Status.BAD_REQUEST)
-          .entity(new ErrorMessage(400, "Signup is not Available"))
+      return Response.status(Response.Status.CREATED.getStatusCode(), "User Registration Successful.")
+          .entity(registeredUser)
           .build();
+    } else {
+      return Response.status(Response.Status.BAD_REQUEST.getStatusCode(), "Signup is not available").build();
     }
   }
 
@@ -1223,7 +1222,10 @@ public class UserResource extends EntityResource<User, UserRepository> {
         .contains(userName)) {
       newUser.setIsAdmin(true);
     }
-    return dao.create(uriInfo, newUser);
+    // remove auth mechanism from the user
+    User registeredUser = dao.create(uriInfo, newUser);
+    registeredUser.setAuthenticationMechanism(null);
+    return registeredUser;
   }
 
   public void confirmEmailRegistration(UriInfo uriInfo, String emailToken) throws IOException {
