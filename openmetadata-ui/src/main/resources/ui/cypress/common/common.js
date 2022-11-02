@@ -300,6 +300,12 @@ export const editOwnerforCreatedService = (
     'getSelectedService'
   );
 
+  interceptURL(
+    'GET',
+    `/api/v1/services/ingestionPipelines?fields=owner,pipelineStatuses&service=${service_Name}`,
+    'waitForIngestion'
+  );
+
   //click on created service
   cy.get(`[data-testid="service-name-${service_Name}"]`)
     .should('exist')
@@ -307,6 +313,7 @@ export const editOwnerforCreatedService = (
     .click();
 
   verifyResponseStatusCode('@getSelectedService', 200);
+  verifyResponseStatusCode('@waitForIngestion', 200);
 
   interceptURL(
     'GET',
@@ -317,7 +324,8 @@ export const editOwnerforCreatedService = (
   //Click on edit owner button
   cy.get('[data-testid="edit-Owner-icon"]')
     .should('exist')
-    .should('be.visible').trigger('mouseover')
+    .should('be.visible')
+    .trigger('mouseover')
     .click();
 
   verifyResponseStatusCode('@waitForTeams', 200);
