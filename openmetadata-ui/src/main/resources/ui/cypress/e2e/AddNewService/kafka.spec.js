@@ -11,7 +11,15 @@
  *  limitations under the License.
  */
 
-import { deleteCreatedService, editOwnerforCreatedService, goToAddNewServicePage, login, testServiceCreationAndIngestion, updateDescriptionForIngestedTables, uuid } from '../../common/common';
+import {
+    deleteCreatedService,
+    editOwnerforCreatedService,
+    goToAddNewServicePage,
+    login,
+    testServiceCreationAndIngestion,
+    updateDescriptionForIngestedTables,
+    uuid
+} from '../../common/common';
 import { LOGIN, SERVICE_TYPE } from '../../constants/constants';
 
 const serviceType = 'Kafka';
@@ -68,7 +76,11 @@ describe('Kafka Ingestion', () => {
   });
 
   it('Edit and validate owner', () => {
-    editOwnerforCreatedService(SERVICE_TYPE.Messaging, serviceName);
+    editOwnerforCreatedService(
+      SERVICE_TYPE.Messaging,
+      serviceName,
+      'messagingServices'
+    );
   });
 
   it('delete created service', () => {

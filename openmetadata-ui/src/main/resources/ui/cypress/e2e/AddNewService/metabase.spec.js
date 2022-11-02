@@ -11,7 +11,15 @@
  *  limitations under the License.
  */
 
-import { deleteCreatedService, editOwnerforCreatedService, goToAddNewServicePage, login, testServiceCreationAndIngestion, updateDescriptionForIngestedTables, uuid } from '../../common/common';
+import {
+    deleteCreatedService,
+    editOwnerforCreatedService,
+    goToAddNewServicePage,
+    login,
+    testServiceCreationAndIngestion,
+    updateDescriptionForIngestedTables,
+    uuid
+} from '../../common/common';
 import { LOGIN, SERVICE_TYPE } from '../../constants/constants';
 
 const serviceType = 'Metabase';
@@ -64,7 +72,11 @@ describe('Metabase Ingestion', () => {
   });
 
   it('Edit and validate owner', () => {
-    editOwnerforCreatedService(SERVICE_TYPE.Dashboard, serviceName);
+    editOwnerforCreatedService(
+      SERVICE_TYPE.Dashboard,
+      serviceName,
+      'dashboardServices'
+    );
   });
 
   it('delete created service', () => {
