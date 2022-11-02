@@ -53,7 +53,7 @@ describe('MySQL Ingestion', () => {
   });
 
   it('Edit and validate owner', () => {
-    editOwnerforCreatedService(SERVICE_TYPE.Database, serviceName);
+    editOwnerforCreatedService(SERVICE_TYPE.Database, serviceName, 'databaseServices');
   });
 
   it('delete created service', () => {

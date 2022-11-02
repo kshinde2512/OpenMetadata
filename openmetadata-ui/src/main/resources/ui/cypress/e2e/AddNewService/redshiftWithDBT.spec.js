@@ -159,7 +159,7 @@ describe('RedShift Ingestion', () => {
   });
 
   it('Edit and validate owner', () => {
-    editOwnerforCreatedService(SERVICE_TYPE.Database, REDSHIFT.serviceName);
+    editOwnerforCreatedService(SERVICE_TYPE.Database, REDSHIFT.serviceName, 'databaseServices');
   });
 
   it('delete created service', () => {
