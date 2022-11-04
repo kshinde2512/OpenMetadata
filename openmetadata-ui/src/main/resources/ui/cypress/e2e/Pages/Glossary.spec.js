@@ -11,8 +11,20 @@
  *  limitations under the License.
  */
 
-import { descriptionBox, interceptURL, login, verifyResponseStatusCode, visitEntityDetailsPage } from '../../common/common';
-import { DELETE_TERM, LOGIN, NEW_GLOSSARY, NEW_GLOSSARY_TERMS, SEARCH_ENTITY_TABLE } from '../../constants/constants';
+import {
+    descriptionBox,
+    interceptURL,
+    login,
+    verifyResponseStatusCode,
+    visitEntityDetailsPage
+} from '../../common/common';
+import {
+    DELETE_TERM,
+    LOGIN,
+    NEW_GLOSSARY,
+    NEW_GLOSSARY_TERMS,
+    SEARCH_ENTITY_TABLE
+} from '../../constants/constants';
 
 const createGlossaryTerm = (term) => {
   cy.get('[data-testid="header"]')
@@ -101,7 +113,10 @@ describe('Glossary page should work properly', () => {
     cy.goToHomePage();
 
     interceptURL('GET', '/api/v1/glossaryTerms*', 'getGlossaryTerms');
-    cy.get('[data-testid="governance"]').should("exist").should("be.visible").click({ force: true })
+    cy.get('[data-testid="governance"]')
+      .should('exist')
+      .should('be.visible')
+      .click({ force: true });
     //Clicking on Glossary
     cy.get('[data-testid="appbar-item-glossary"]')
       .should('exist')
@@ -397,7 +412,10 @@ describe('Glossary page should work properly', () => {
       .should('be.visible')
       .contains(term);
 
-    cy.get('[data-testid="governance"]').should("exist").should("be.visible").click({ force: true })
+    cy.get('[data-testid="governance"]')
+      .should('exist')
+      .should('be.visible')
+      .click({ force: true });
     cy.get('[data-testid="appbar-item-glossary"]')
       .should('exist')
       .should('be.visible')
@@ -433,16 +451,29 @@ describe('Glossary page should work properly', () => {
     cy.get('[role="button"]').eq(0).should('be.visible').click();
     cy.get('[role="button"]').eq(0).should('be.visible').click();
 
+    interceptURL('PATCH', '/api/v1/tables/*', 'removeTags');
     cy.get('[data-testid="saveAssociatedTag"]').scrollIntoView().click();
+    verifyResponseStatusCode('@removeTags', 200);
 
+    cy.get('[data-testid="entity-tags"]')
+      .should('not.contain', term)
+      .and('not.contain', 'Personal');
     //Remove the added column tag from entity
 
     cy.get('[data-testid="remove"]').eq(0).should('be.visible').click();
-
     cy.wait(500);
+    interceptURL('PATCH', '/api/v1/tables/*', 'removeSchemaTags');
     cy.get('[data-testid="remove"]').eq(0).should('be.visible').click();
+    verifyResponseStatusCode('@removeSchemaTags', 200);
 
-    cy.get('[data-testid="governance"]').should("exist").should("be.visible").click({ force: true })
+    cy.get('[data-testid="tags"]')
+      .should('not.contain', term)
+      .and('not.contain', 'Personal');
+
+    cy.get('[data-testid="governance"]')
+      .should('exist')
+      .should('be.visible')
+      .click({ force: true });
     cy.get('[data-testid="appbar-item-glossary"]')
       .should('exist')
       .should('be.visible')
