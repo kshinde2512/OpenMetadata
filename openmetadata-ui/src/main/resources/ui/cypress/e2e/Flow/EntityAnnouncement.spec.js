@@ -12,7 +12,7 @@
  */
 
 import { getCurrentLocaleDate, getFutureLocaleDateFromCurrentDate } from "../../../src/utils/TimeUtils";
-import { descriptionBox, login, visitEntityDetailsPage } from "../../common/common";
+import { descriptionBox, interceptURL, login, verifyResponseStatusCode, visitEntityDetailsPage } from "../../common/common";
 import { ANNOUNCEMENT_ENTITIES, LOGIN } from "../../constants/constants";
 
 
@@ -53,12 +53,13 @@ describe("Entity Announcement", () => {
       .should('be.visible')
       .contains('No Announcements, Click on add announcement to add one.');
     
+    interceptURL('POST', '/api/v1/feed', 'waitForAnnouncement')
     // Create Active Announcement
     createAnnouncement("Announcement Title", startDate, endDate, "Announcement Description")
 
     // wait time for success toast message
-    cy.wait(5000);
-    
+    verifyResponseStatusCode('@waitForAnnouncement', 201);
+    cy.get('.Toastify__close-button >').should('be.visible').click()
     // Create InActive Announcement
     const InActiveStartDate = getFutureLocaleDateFromCurrentDate(6);
     const InActiveEndDate = getFutureLocaleDateFromCurrentDate(11);
@@ -66,8 +67,8 @@ describe("Entity Announcement", () => {
     createAnnouncement("InActive Announcement Title",InActiveStartDate,InActiveEndDate,"InActive Announcement Description")
 
      // wait time for success toast message
-    cy.wait(5000);
-   
+     verifyResponseStatusCode('@waitForAnnouncement', 201)
+     cy.get('.Toastify__close-button >').should('be.visible').click()
      // check for inActive-announcement
     cy.get('[data-testid="inActive-announcements"]').should('be.visible');
 
