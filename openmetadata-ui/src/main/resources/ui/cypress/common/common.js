@@ -80,7 +80,7 @@ export const handleIngestionRetry = (
     testIngestionsTab();
     retryCount++;
     // the latest run should be success
-    cy.get('[data-testid="pipeline-status"]').then(($ingestionStatus) => {
+    cy.get(`.ant-table-tbody > :nth-child(${rowIndex}) > :nth-child(4)`).then(($ingestionStatus) => {
       if (
         ($ingestionStatus.text() === 'Running' ||
           $ingestionStatus.text() === 'Queued') &&
@@ -92,7 +92,7 @@ export const handleIngestionRetry = (
         //verifyResponseStatusCode('@pipelineStatuses', 200);
         checkSuccessState();
       } else {
-        cy.get('[data-testid="pipeline-status"]').should(
+        cy.get(`.ant-table-tbody > :nth-child(${rowIndex}) > :nth-child(4)`).should(
           'have.text',
           'Success'
         );
