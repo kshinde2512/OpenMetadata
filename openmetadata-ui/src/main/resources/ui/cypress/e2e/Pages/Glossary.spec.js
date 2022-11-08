@@ -148,15 +148,6 @@ describe('Glossary page should work properly', () => {
       .scrollIntoView()
       .should('be.visible')
       .type(NEW_GLOSSARY.description);
-    
-    interceptURL('GET', '/api/v1/tags/*', 'getTags')
-    //Click on add tag dropdown
-    cy.get('.ant-select-selector').scrollIntoView().should('be.visible').click();
-    
-    cy.contains(NEW_GLOSSARY.tag).should('be.visible').click();
-    verifyResponseStatusCode('@getTags', 200)
-    //Close the tag dropdown
-    cy.get('.ant-select-selection-overflow').scrollIntoView().should('be.visible').click();
 
     cy.get('[data-testid="add-reviewers"]')
       .scrollIntoView()
@@ -198,7 +189,6 @@ describe('Glossary page should work properly', () => {
     cy.get('[data-testid="glossary-left-panel"]').contains(NEW_GLOSSARY.name).should('be.visible');
     cy.get('[data-testid="header"]').should('be.visible').should('contain', NEW_GLOSSARY.name);
     cy.get('[data-testid="viewer-container"]').should('be.visible').should('contain', NEW_GLOSSARY.description);
-    cy.get('[data-testid="tags"]').should('be.visible').should('contain', NEW_GLOSSARY.tag);;
     cy.get('[data-testid="reviewer-card-container"]').should('be.visible').should('contain', NEW_GLOSSARY.reviewer);
   })
 
