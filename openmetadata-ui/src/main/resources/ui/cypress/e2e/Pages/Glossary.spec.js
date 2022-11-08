@@ -148,12 +148,15 @@ describe('Glossary page should work properly', () => {
       .scrollIntoView()
       .should('be.visible')
       .type(NEW_GLOSSARY.description);
+    
+    interceptURL('GET', '/api/v1/tags/*', 'getTags')
     //Click on add tag dropdown
-    cy.get('[class="ant-select-selector"]').should('be.visible').click();
-
+    cy.get('[class="ant-select-selector"]').scrollIntoView().should('be.visible').click();
+    
     cy.contains(NEW_GLOSSARY.tag).should('be.visible').click();
+    verifyResponseStatusCode('@getTags', 200)
     //Close the tag dropdown
-    cy.get('[class="ant-select-selector"]').should('be.visible').click();
+    cy.get('[class="ant-select-selector"]').scrollIntoView().should('be.visible').click();
 
     cy.get('[data-testid="add-reviewers"]')
       .scrollIntoView()
