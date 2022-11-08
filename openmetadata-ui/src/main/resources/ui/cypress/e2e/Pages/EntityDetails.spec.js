@@ -259,19 +259,21 @@ describe('Entity Details Page', () => {
     cy.get('#endtDate').should('be.visible').type(endDate);
     cy.get(descriptionBox).type('Description');
 
+    interceptURL('POST', '/api/v1/feed', 'waitForAnnouncement')
     cy.get('.ant-modal-footer > .ant-btn-primary')
       .should('be.visible')
       .contains('Submit')
       .scrollIntoView()
       .click();
 
-    cy.wait(5000);
-
+    verifyResponseStatusCode('@waitForAnnouncement', 201)
+    cy.get('.Toastify__close-button >').should('be.visible').click()
     cy.get('.anticon > svg').should('be.visible').click();
 
     // reload page to get the active announcement card
+    interceptURL('GET', '/api/v1/feed?entityLink=*&type=Announcement&activeAnnouncement=true', 'getEntityDetails')
     cy.reload();
-
+    verifyResponseStatusCode('@getEntityDetails', 200)
     // check for announcement card on entity page
     cy.get('[data-testid="announcement-card"]').should('be.visible');
 
