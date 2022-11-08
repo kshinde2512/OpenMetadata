@@ -13,7 +13,7 @@
 
 /// <reference types="cypress" />
 
-import { SEARCH_INDEX } from '../constants/constants';
+import { DELETE_TERM, SEARCH_INDEX } from '../constants/constants';
 
 export const descriptionBox =
   '.toastui-editor-md-container > .toastui-editor > .ProseMirror';
@@ -226,7 +226,7 @@ export const testServiceCreationAndIngestion = (
   handleIngestionRetry(type, testIngestionButton);
 };
 
-export const deleteCreatedService = (typeOfService, service_Name) => {
+export const deleteCreatedService = (typeOfService, service_Name, deleteService) => {
   //Click on settings page
   cy.get('[data-testid="appbar-item-settings"]').should('be.visible').click();
 
@@ -269,10 +269,10 @@ export const deleteCreatedService = (typeOfService, service_Name) => {
 
   cy.get('[data-testid="confirmation-text-input"]')
     .should('be.visible')
-    .type('DELETE');
+    .type(DELETE_TERM);
   interceptURL(
     'DELETE',
-    '/api/v1/services/*/*?hardDelete=true&recursive=true',
+    `/api/v1/services/${deleteService}/*`,
     'deleteService'
   );
   interceptURL(
@@ -283,9 +283,9 @@ export const deleteCreatedService = (typeOfService, service_Name) => {
 
   cy.get('[data-testid="confirm-button"]').should('be.visible').click();
   verifyResponseStatusCode('@deleteService', 200);
-  cy.reload();
-  verifyResponseStatusCode('@serviceDetails', 404);
-  cy.contains(`instance for ${service_Name} not found`);
+  // cy.reload();
+  // verifyResponseStatusCode('@serviceDetails', 404);
+  //cy.contains(`instance for ${service_Name} not found`);
   //Checking if the service got deleted successfully
   //Click on settings page
   cy.get('[data-testid="appbar-item-settings"]').should('be.visible').click();
