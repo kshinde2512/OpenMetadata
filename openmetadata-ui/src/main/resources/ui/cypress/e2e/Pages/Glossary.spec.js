@@ -15,6 +15,7 @@ import {
     descriptionBox,
     interceptURL,
     login,
+    toastNotification,
     verifyResponseStatusCode,
     visitEntityDetailsPage
 } from '../../common/common';
@@ -71,7 +72,7 @@ const createGlossaryTerm = (term) => {
 const deleteGlossary = ({ name }) => {
   verifyResponseStatusCode('@getGlossaryTerms', 200);
   cy.get('#left-panelV1').contains(name).should('be.visible').click();
-  cy.wait(500);
+
   cy.get('[data-testid="inactive-link"]').contains(name).should('be.visible');
 
   cy.get('[data-testid="manage-button"]').should('be.visible').click();
@@ -81,6 +82,7 @@ const deleteGlossary = ({ name }) => {
     .click();
 
   cy.get('.tw-modal-container').should('be.visible');
+  cy.get('[data-testid="modal-header"]').should('be.visible').should('contain', `Delete ${name}`);
   cy.get('[data-testid="confirmation-text-input"]')
     .should('be.visible')
     .type(DELETE_TERM);
@@ -90,13 +92,9 @@ const deleteGlossary = ({ name }) => {
     .should('not.disabled')
     .click();
 
-  cy.get('.Toastify__toast-body')
-    .contains('Glossary term deleted successfully!')
-    .should('be.visible');
-
-  cy.get('.Toastify__close-button > svg > path').should('be.visible').click();
+  toastNotification('Glossary term deleted successfully!')
   cy.get('.tw-modal-container').should('not.exist');
-  cy.wait(500);
+  cy.get('#left-panelV1').should('be.visible').should('not.contain', name)
 };
 
 const goToAssetsTab = (term) => {
@@ -150,6 +148,12 @@ describe('Glossary page should work properly', () => {
       .scrollIntoView()
       .should('be.visible')
       .type(NEW_GLOSSARY.description);
+    //Click on add tag dropdown
+    cy.get('[class="ant-select-selector"]').should('be.visible').click();
+
+    cy.contains(NEW_GLOSSARY.tag).should('be.visible').click();
+    //Close the tag dropdown
+    cy.get('[class="ant-select-selector"]').should('be.visible').click();
 
     cy.get('[data-testid="add-reviewers"]')
       .scrollIntoView()
@@ -158,7 +162,7 @@ describe('Glossary page should work properly', () => {
 
     cy.get('.tw-modal-container').should('be.visible');
 
-    cy.get('.tw-grid > [data-testid="user-card-container"]')
+    cy.get('[data-testid="user-card-container"]')
       .first()
       .should('be.visible')
       .as('reviewer');
@@ -186,6 +190,14 @@ describe('Glossary page should work properly', () => {
         expect(text).to.equal(NEW_GLOSSARY.name);
       });
   });
+
+  it('Verify added glossary details', () => {
+    cy.get('[data-testid="glossary-left-panel"]').contains(NEW_GLOSSARY.name).should('be.visible');
+    cy.get('[data-testid="header"]').should('be.visible').should('contain', NEW_GLOSSARY.name);
+    cy.get('[data-testid="viewer-container"]').should('be.visible').should('contain', NEW_GLOSSARY.description);
+    cy.get('[data-testid="tags"]').should('be.visible').should('contain', NEW_GLOSSARY.tag);;
+    cy.get('[data-testid="reviewer-card-container"]').should('be.visible').should('contain', NEW_GLOSSARY.reviewer);
+  })
 
   it('Create glossary term should work properly', () => {
     const terms = Object.values(NEW_GLOSSARY_TERMS);
@@ -243,7 +255,6 @@ describe('Glossary page should work properly', () => {
     const newRef = { name: 'take', url: 'https://take.com' };
     const newDescription = 'Updated description';
     cy.get('#left-panelV1').should('be.visible').contains(term).click();
-    cy.wait(500);
     verifyResponseStatusCode('@permissionApi', 200);
     verifyResponseStatusCode('@glossaryAPI', 200);
 
@@ -395,7 +406,7 @@ describe('Glossary page should work properly', () => {
       .contains(term);
 
     //Add tag to schema table
-    cy.get('[data-row-key="comments"] [data-testid="tags-wrapper"]')
+    cy.get('[data-testid="tag-container"]').eq(1)
       .should('be.visible')
       .click();
     cy.get('[class*="-control"]').should('be.visible').type(term);
@@ -504,6 +515,7 @@ describe('Glossary page should work properly', () => {
       .click();
 
     cy.get('.tw-modal-container').should('be.visible');
+    cy.get('[data-testid="modal-header"]').should('be.visible').should('contain', `Delete ${NEW_GLOSSARY.name}`);
     cy.get('[data-testid="confirmation-text-input"]')
       .should('be.visible')
       .type(DELETE_TERM);
@@ -514,11 +526,7 @@ describe('Glossary page should work properly', () => {
       .click();
     verifyResponseStatusCode('@getGlossary', 200);
 
-    cy.get('.Toastify__toast-body')
-      .contains('Glossary deleted successfully!')
-      .should('be.visible');
-
-    cy.get('.Toastify__close-button > svg > path').should('be.visible').click();
+    toastNotification('Glossary deleted successfully!')
     cy.contains('Add New Glossary').should('be.visible');
   });
 });

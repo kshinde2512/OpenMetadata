@@ -198,6 +198,8 @@ export const NEW_TAG = {
 export const NEW_GLOSSARY = {
   name: 'Business Glossary',
   description: 'This is the Business glossary',
+  reviewer: 'Aaron Johnson',
+  tag: 'PII.None'
 };
 export const NEW_GLOSSARY_TERMS = {
   term_1: {
