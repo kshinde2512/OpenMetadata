@@ -70,8 +70,9 @@ const createGlossaryTerm = (term) => {
 };
 
 const deleteGlossary = ({ name }) => {
-  cy.get('#left-panelV1').contains(name).should('be.visible').click();
   verifyResponseStatusCode('@getGlossaryTerms', 200);
+  cy.get('#left-panelV1').contains(name).should('be.visible').click();
+  cy.wait(500);
   cy.get('[data-testid="inactive-link"]').contains(name).should('be.visible');
 
   cy.get('[data-testid="manage-button"]').should('be.visible').click();
