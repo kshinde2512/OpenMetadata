@@ -290,7 +290,7 @@ export const DBT = {
   dataQualityTest2: 'not_null_customers_customer_id',
 };
 
-export const DELETE_SERVICE = {
+export const API_SERVICE = {
   databaseServices: 'databaseServices',
   messagingServices: 'messagingServices',
   pipelineServices: 'pipelineServices',

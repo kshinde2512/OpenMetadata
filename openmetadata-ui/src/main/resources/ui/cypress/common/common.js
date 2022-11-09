@@ -215,7 +215,7 @@ export const testServiceCreationAndIngestion = (
     handleIngestionRetry(type, testIngestionButton);
 };
 
-export const deleteCreatedService = (typeOfService, service_Name, deleteService) => {
+export const deleteCreatedService = (typeOfService, service_Name, apiService) => {
     //Click on settings page
     cy.get('[data-testid="appbar-item-settings"]').should('be.visible').click();
 
@@ -261,7 +261,7 @@ export const deleteCreatedService = (typeOfService, service_Name, deleteService)
         .type(DELETE_TERM);
     interceptURL(
         'DELETE',
-        `/api/v1/services/${deleteService}/*`,
+        `/api/v1/services/${apiService}/*`,
         'deleteService'
     );
     interceptURL(
@@ -272,9 +272,6 @@ export const deleteCreatedService = (typeOfService, service_Name, deleteService)
 
     cy.get('[data-testid="confirm-button"]').should('be.visible').click();
     verifyResponseStatusCode('@deleteService', 200);
-    cy.reload();
-    verifyResponseStatusCode('@serviceDetails', 404);
-    cy.contains(`instance for ${service_Name} not found`);
     //Checking if the service got deleted successfully
     //Click on settings page
     cy.get('[data-testid="appbar-item-settings"]').should('be.visible').click();

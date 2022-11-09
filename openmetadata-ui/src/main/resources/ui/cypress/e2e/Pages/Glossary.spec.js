@@ -399,7 +399,7 @@ describe('Glossary page should work properly', () => {
       .contains(term);
 
     //Add tag to schema table
-    cy.get('[data-testid="tag-container"]').eq(1)
+    cy.get('[data-row-key="comments"] [data-testid="tags-wrapper"]')
       .should('be.visible')
       .click();
     cy.get('[class*="-control"]').should('be.visible').type(term);

@@ -23,9 +23,7 @@ import {
     visitEntityDetailsPage
 } from '../../common/common';
 import {
-    DBT,
-    DELETE_SERVICE,
-    HTTP_CONFIG_SOURCE,
+    API_SERVICE, DBT, HTTP_CONFIG_SOURCE,
     LOGIN,
     SERVICE_TYPE
 } from '../../constants/constants';
@@ -163,11 +161,11 @@ describe('RedShift Ingestion', () => {
     editOwnerforCreatedService(
       SERVICE_TYPE.Database,
       REDSHIFT.serviceName,
-      DELETE_SERVICE.databaseServices
+      API_SERVICE.databaseServices
     );
   });
 
   it('delete created service', () => {
-    deleteCreatedService(SERVICE_TYPE.Database, REDSHIFT.serviceName, DELETE_SERVICE.databaseServices);
+    deleteCreatedService(SERVICE_TYPE.Database, REDSHIFT.serviceName, API_SERVICE.databaseServices);
   });
 });

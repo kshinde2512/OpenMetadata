@@ -12,7 +12,7 @@
  */
 
 import { deleteCreatedService, editOwnerforCreatedService, goToAddNewServicePage, login, testServiceCreationAndIngestion, updateDescriptionForIngestedTables, uuid } from '../../common/common';
-import { DELETE_SERVICE, LOGIN, SERVICE_TYPE } from '../../constants/constants';
+import { API_SERVICE, LOGIN, SERVICE_TYPE } from '../../constants/constants';
 
 const serviceType = 'Metabase';
 const serviceName = `${serviceType}-ct-test-${uuid()}`;
@@ -67,11 +67,11 @@ describe('Metabase Ingestion', () => {
     editOwnerforCreatedService(
       SERVICE_TYPE.Dashboard,
       serviceName,
-      DELETE_SERVICE.dashboardServiecs
+      API_SERVICE.dashboardServiecs
     );
   });
 
   it('delete created service', () => {
-    deleteCreatedService(SERVICE_TYPE.Dashboard, serviceName, DELETE_SERVICE.dashboardServiecs);
+    deleteCreatedService(SERVICE_TYPE.Dashboard, serviceName, API_SERVICE.dashboardServiecs);
   });
 });
