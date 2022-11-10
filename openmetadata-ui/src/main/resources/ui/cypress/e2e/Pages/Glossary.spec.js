@@ -187,9 +187,15 @@ describe('Glossary page should work properly', () => {
 
   it('Verify added glossary details', () => {
     cy.get('[data-testid="glossary-left-panel"]').contains(NEW_GLOSSARY.name).should('be.visible');
-    cy.get('[data-testid="header"]').should('be.visible').should('contain', NEW_GLOSSARY.name);
-    cy.get('[data-testid="viewer-container"]').should('be.visible').should('contain', NEW_GLOSSARY.description);
-    cy.get('[data-testid="reviewer-card-container"]').should('be.visible').should('contain', NEW_GLOSSARY.reviewer);
+    cy.get('[data-testid="header"]').invoke('text').then((text) => {
+      expect(text).to.contain(NEW_GLOSSARY.name)
+    })
+    cy.get('[data-testid="viewer-container"]').invoke('text').then((text) => {
+      expect(text).to.contain(NEW_GLOSSARY.description) 
+    })
+    cy.get('[data-testid="reviewer-card-container"]').invoke('text').then((text) => {
+      expect(text).to.contain(NEW_GLOSSARY.reviewer) 
+    })
   })
 
   it('Create glossary term should work properly', () => {
