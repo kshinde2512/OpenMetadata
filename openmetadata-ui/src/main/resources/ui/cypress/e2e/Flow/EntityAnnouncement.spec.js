@@ -35,10 +35,8 @@ describe("Entity Announcement", () => {
     cy.get('#endtDate').should('be.visible').type(endDate);
     cy.get(descriptionBox).type(description);
 
-    cy.get('.ant-modal-footer > .ant-btn-primary')
+    cy.get('[id="announcement-submit"]').scrollIntoView()
       .should('be.visible')
-      .contains('Submit')
-      .scrollIntoView()
       .click();
   }
 

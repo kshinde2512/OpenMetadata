@@ -59,7 +59,7 @@ describe('Teams flow should work properly', () => {
     cy.get('[data-testid="appbar-item-settings"]').should('be.visible').click();
 
     //Clicking on teams
-    cy.get('[data-menu-id*="teams"]')
+    cy.get('[data-testid="settings-left-panel"]')
       .should('exist')
       .should('be.visible')
       .click();

@@ -43,7 +43,7 @@ describe('Users flow should work properly', () => {
       '/api/v1/users?fields=profile,teams,roles&&isBot=false&limit=15',
       'getUsers'
     );
-    cy.get('.ant-menu-title-content')
+    cy.get('[data-testid="settings-left-panel"]')
       .contains('Users')
       .should('exist')
       .should('be.visible')

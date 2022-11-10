@@ -65,7 +65,7 @@ describe('Roles page should work properly', () => {
 
     cy.get('[data-testid="appbar-item-settings"]').should('be.visible').click();
 
-    cy.get('[data-menu-id*="roles"]').should('be.visible').click();
+    cy.get('[data-testid="settings-left-panel"]').contains('Roles').should('be.visible').click();
 
     verifyResponseStatusCode('@getRoles', 200);
 

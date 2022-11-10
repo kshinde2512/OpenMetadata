@@ -251,10 +251,8 @@ describe('Entity Details Page', () => {
     cy.get(descriptionBox).type('Description');
 
     interceptURL('POST', '/api/v1/feed', 'waitForAnnouncement')
-    cy.get('.ant-modal-footer > .ant-btn-primary')
+    cy.get('[id="announcement-submit"]').scrollIntoView()
       .should('be.visible')
-      .contains('Submit')
-      .scrollIntoView()
       .click();
 
     verifyResponseStatusCode('@waitForAnnouncement', 201)
@@ -272,7 +270,6 @@ describe('Entity Details Page', () => {
   };
 
   it('Add Owner and Tier for entity', () => {
-    
     addOwnerAndTier(DELETE_ENTITY.table);
   });
 

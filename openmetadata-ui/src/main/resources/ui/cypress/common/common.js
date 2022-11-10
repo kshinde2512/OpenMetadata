@@ -714,14 +714,7 @@ export const addCustomPropertiesForEntity = (
     //Adding value for the custom property
 
     //Navigating through the created custom property for adding value
-    cy.get('tbody')
-        .contains(propertyName)
-        .scrollIntoView()
-        .next('td')
-        .contains('No data')
-        .next('[data-testid="edit-icon"]')
-        .as('editbutton');
-
+    cy.get(`[data-row-key="${propertyName}"]`).find('[data-testid="edit-icon"]').as('editbutton');
     cy.wait(1000);
 
     cy.get('@editbutton').should('exist').should('be.visible').click();
@@ -743,29 +736,12 @@ export const addCustomPropertiesForEntity = (
         }
     });
 
-    //Checking the added value to the property
-    cy.get('tbody')
-        .contains(propertyName)
-        .scrollIntoView()
-        .next('td')
-        .as('value');
-
-    cy.get('tbody')
-        .contains(propertyName)
-        .scrollIntoView()
-        .next('td')
-        .should('contain', value);
+    cy.get(`[data-row-key="${propertyName}"]`).find('[data-testid="value"]').should('contain', value)
 };
 
 export const editCreatedProperty = (propertyName) => {
     //Fetching for edit button
-    cy.get('tbody')
-        .children()
-        .contains(propertyName)
-        .scrollIntoView()
-        .nextUntil('button')
-        .find('[data-testid="edit-button"]')
-        .as('editbutton');
+    cy.get(`[data-row-key="${propertyName}"]`).find('[data-testid="edit-button"]').as('editbutton');
 
     cy.get('@editbutton').click();
 
@@ -783,23 +759,12 @@ export const editCreatedProperty = (propertyName) => {
     cy.get('.tw-modal-container').should('not.exist');
 
     //Fetching for updated descriptions for the created custom property
-    cy.get('tbody')
-        .children()
-        .contains(propertyName)
-        .nextUntil('div')
-        .find('[data-testid="viewer-container"]')
-        .should('contain', 'This is new description');
+    cy.get(`[data-row-key="${propertyName}"]`).find('[data-testid="viewer-container"]').should('contain', 'This is new description');
 };
 
 export const deleteCreatedProperty = (propertyName) => {
     //Fetching for delete button
-
-    cy.get('tbody')
-        .children()
-        .contains(propertyName)
-        .nextUntil('button')
-        .find('[data-testid="delete-button"]')
-        .as('deletebutton');
+    cy.get(`[data-row-key="${propertyName}"]`).find('[data-testid="delete-button"]').as('deletebutton');
 
     cy.get('@deletebutton').click();
 

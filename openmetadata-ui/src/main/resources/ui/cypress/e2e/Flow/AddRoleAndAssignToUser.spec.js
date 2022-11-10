@@ -119,10 +119,10 @@ describe("Test Add role and assign it to the user", () => {
 
     cy.get('[data-testid="searchbar"]').should('exist').should('be.visible').type(userName);
 
-    cy.get('.ant-table-tbody ').should('contain', userName);
+    cy.get(`[data-testid="${userName}"]`).should('be.visible');
 
     interceptURL('GET', '/api/v1/users/*', 'userDetailsPage')
-    cy.get('[class="ant-table-cell"]').contains(userName).should('be.visible').click();
+    cy.get(`[data-testid="${userName}"]`).should('be.visible').click();
     verifyResponseStatusCode('@userDetailsPage', 200)
 
     cy.get('[data-testid="left-panel"]').should('be.visible').should('contain', roleName)

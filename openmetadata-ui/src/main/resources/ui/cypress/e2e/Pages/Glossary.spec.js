@@ -131,10 +131,10 @@ describe('Glossary page should work properly', () => {
 
   it('Create new glossary flow should work properly', () => {
     // check for no data placeholder
-    cy.contains('Add New Glossary').should('be.visible');
+    cy.get('[data-testid="add-new-glossary"]').should('be.visible').as('addNewGlossary');
 
     // Redirecting to add glossary page
-    cy.get('[data-testid="add-webhook-button"]').should('be.visible').click();
+    cy.get('@addNewGlossary').click();
     cy.get('.tw-form-container > .tw-heading')
       .contains('Add Glossary')
       .should('be.visible');
@@ -149,19 +149,20 @@ describe('Glossary page should work properly', () => {
       .should('be.visible')
       .type(NEW_GLOSSARY.description);
 
+    interceptURL('GET' , '/api/v1/search/query?q=***&from=0&size=10&index=user_search_index', 'getUsers')
     cy.get('[data-testid="add-reviewers"]')
       .scrollIntoView()
       .should('be.visible')
       .click();
-
+    verifyResponseStatusCode('@getUsers', 200)
     cy.get('.tw-modal-container').should('be.visible');
 
-    cy.get('[data-testid="user-card-container"]')
-      .first()
-      .should('be.visible')
-      .as('reviewer');
+    interceptURL('GET' , '/api/v1/search/suggest?q=*&index=user_search_index', 'searchUser')
+    cy.get('[data-testid="search-bar-container"]').should('be.visible').type(NEW_GLOSSARY.reviewer);
+    verifyResponseStatusCode('@searchUser', 200)
 
-    cy.get('@reviewer')
+    cy.get('[data-testid="user-card-container"]')
+      .should('be.visible')
       .find('[data-testid="checkboxAddUser"]')
       .should('be.visible')
       .check();
