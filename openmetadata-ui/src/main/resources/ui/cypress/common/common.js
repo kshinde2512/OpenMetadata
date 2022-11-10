@@ -217,7 +217,7 @@ export const testServiceCreationAndIngestion = (
 
 export const deleteCreatedService = (typeOfService, service_Name, apiService) => {
     //Click on settings page
-    cy.get('[data-testid="appbar-item-settings"]').should('be.visible').click();
+    cy.get('[data-testid="appbar-item-settings"]').should('be.visible').click({force : true});
 
     // Services page
     interceptURL('GET', '/api/v1/services/*', 'getServices');
