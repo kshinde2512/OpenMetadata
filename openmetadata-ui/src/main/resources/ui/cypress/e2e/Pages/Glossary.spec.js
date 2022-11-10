@@ -156,9 +156,8 @@ describe('Glossary page should work properly', () => {
       
     cy.get('.tw-modal-container').should('be.visible');
 
-    interceptURL('GET' , '/api/v1/search/suggest?q=*&index=user_search_index', 'searchUser')
     cy.get('[data-testid="search-bar-container"]').should('be.visible').type(NEW_GLOSSARY.reviewer);
-    verifyResponseStatusCode('@searchUser', 200)
+    cy.wait(1000)
 
     cy.get('[data-testid="user-card-container"]')
       .should('be.visible')
