@@ -368,6 +368,7 @@ const GlossaryV1 = ({
                 ) : (
                   <DirectoryTree
                     multiple
+                    className="glossary-tree-container"
                     expandedKeys={expandedKey}
                     loadedKeys={loadingKey}
                     selectedKeys={[selectedKey]}

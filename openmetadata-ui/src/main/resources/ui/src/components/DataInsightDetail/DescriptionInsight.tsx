@@ -33,6 +33,7 @@ import {
   BAR_SIZE,
   ENTITIES_BAR_COLO_MAP,
 } from '../../constants/DataInsight.constants';
+import { DataReportIndex } from '../../generated/dataInsight/dataInsightChart';
 import {
   DataInsightChartResult,
   DataInsightChartType,
@@ -72,6 +73,7 @@ const DescriptionInsight: FC<Props> = ({ chartFilter }) => {
         ...chartFilter,
         dataInsightChartName:
           DataInsightChartType.PercentageOfEntitiesWithDescriptionByType,
+        dataReportIndex: DataReportIndex.EntityReportDataIndex,
       };
       const response = await getAggregateChartData(params);
 
@@ -91,6 +93,7 @@ const DescriptionInsight: FC<Props> = ({ chartFilter }) => {
     <Card
       className="data-insight-card"
       data-testid="entity-description-percentage-card"
+      id={DataInsightChartType.PercentageOfEntitiesWithDescriptionByType}
       loading={isLoading}
       title={
         <>
@@ -111,7 +114,7 @@ const DescriptionInsight: FC<Props> = ({ chartFilter }) => {
           <XAxis dataKey="timestamp" />
 
           <YAxis />
-          <Tooltip content={<CustomTooltip />} />
+          <Tooltip content={<CustomTooltip isPercentage />} />
           <Legend
             align="left"
             content={(props) => renderLegend(props as LegendProps, `${total}%`)}

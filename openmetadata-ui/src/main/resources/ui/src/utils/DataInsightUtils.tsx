@@ -12,15 +12,21 @@
  */
 
 import { Card, Typography } from 'antd';
-import { isInteger, last, toNumber } from 'lodash';
+import { isInteger, isUndefined, last, toNumber } from 'lodash';
 import React from 'react';
 import { ListItem, ListValues } from 'react-awesome-query-builder';
-import { LegendProps, Surface, TooltipProps } from 'recharts';
+import { LegendProps, Surface } from 'recharts';
+import {
+  ENTITIES_SUMMARY_LIST,
+  WEB_SUMMARY_LIST,
+} from '../constants/DataInsight.constants';
 import {
   DataInsightChartResult,
   DataInsightChartType,
 } from '../generated/dataInsight/dataInsightChartResult';
+import { DailyActiveUsers } from '../generated/dataInsight/type/dailyActiveUsers';
 import { TotalEntitiesByTier } from '../generated/dataInsight/type/totalEntitiesByTier';
+import { DataInsightChartTooltipProps } from '../interface/data-insight.interface';
 import { getFormattedDateFromMilliSeconds } from './TimeUtils';
 
 export const renderLegend = (legendData: LegendProps, latest: string) => {
@@ -56,9 +62,11 @@ export const renderLegend = (legendData: LegendProps, latest: string) => {
  * we don't have type for Tooltip value and Tooltip
  * that's why we have to use the type "any"
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const CustomTooltip = (props: TooltipProps<any, any>) => {
-  const { active, payload = [], label } = props;
+
+export const CustomTooltip = (props: DataInsightChartTooltipProps) => {
+  const { active, payload = [], label, isPercentage } = props;
+
+  const suffix = isPercentage ? '%' : '';
 
   if (active && payload && payload.length) {
     return (
@@ -72,7 +80,9 @@ export const CustomTooltip = (props: TooltipProps<any, any>) => {
             </Surface>
             <span>
               {entry.dataKey} -{' '}
-              {isInteger(entry.value) ? entry.value : entry.value?.toFixed(2)}
+              {isInteger(entry.value)
+                ? `${entry.value}${suffix}`
+                : `${entry.value?.toFixed(2)}${suffix}`}
             </span>
           </li>
         ))}
@@ -158,6 +168,11 @@ export const getGraphDataByEntityType = (
 
           break;
 
+        case DataInsightChartType.PageViewsByEntities:
+          value = data.pageViews;
+
+          break;
+
         default:
           break;
       }
@@ -178,6 +193,7 @@ export const getGraphDataByEntityType = (
     data: graphData,
     entities,
     total: getLatestCount(latestData),
+    latestData,
   };
 };
 
@@ -221,4 +237,71 @@ export const getTeamFilter = (suggestionValues: ListValues = []) => {
     label: suggestion.title,
     value: suggestion.value,
   }));
+};
+
+export const getFormattedActiveUsersData = (activeUsers: DailyActiveUsers[]) =>
+  activeUsers.map((user) => ({
+    ...user,
+    timestamp: user.timestamp
+      ? getFormattedDateFromMilliSeconds(user.timestamp)
+      : '',
+  }));
+
+export const getEntitiesChartSummary = (
+  chartResults: (DataInsightChartResult | undefined)[]
+) => {
+  const updatedSummaryList = ENTITIES_SUMMARY_LIST.map((summary) => {
+    // grab the current chart type
+    const chartData = chartResults.find(
+      (chart) => chart?.chartType === summary.id
+    );
+
+    // return default summary if chart data is undefined else calculate the latest count for chartType
+    if (isUndefined(chartData)) return summary;
+    else {
+      if (chartData.chartType === DataInsightChartType.TotalEntitiesByTier) {
+        const { total } = getGraphDataByTierType(chartData.data ?? []);
+
+        return { ...summary, latest: total };
+      } else {
+        const { total } = getGraphDataByEntityType(
+          chartData.data ?? [],
+          chartData.chartType
+        );
+
+        return { ...summary, latest: total };
+      }
+    }
+  });
+
+  return updatedSummaryList;
+};
+
+export const getWebChartSummary = (
+  chartResults: (DataInsightChartResult | undefined)[]
+) => {
+  const updatedSummary = WEB_SUMMARY_LIST.map((summary) => {
+    // grab the current chart type
+    const chartData = chartResults.find(
+      (chart) => chart?.chartType === summary.id
+    );
+    // return default summary if chart data is undefined else calculate the latest count for chartType
+    if (isUndefined(chartData)) return summary;
+    else {
+      if (chartData.chartType === DataInsightChartType.DailyActiveUsers) {
+        const latestData = last(chartData.data);
+
+        return { ...summary, latest: latestData?.activeUsers ?? 0 };
+      } else {
+        const { total } = getGraphDataByEntityType(
+          chartData.data ?? [],
+          chartData.chartType
+        );
+
+        return { ...summary, latest: total };
+      }
+    }
+  });
+
+  return updatedSummary;
 };

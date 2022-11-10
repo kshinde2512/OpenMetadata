@@ -33,6 +33,7 @@ import {
   BAR_SIZE,
   TIER_BAR_COLOR_MAP,
 } from '../../constants/DataInsight.constants';
+import { DataReportIndex } from '../../generated/dataInsight/dataInsightChart';
 import {
   DataInsightChartResult,
   DataInsightChartType,
@@ -68,6 +69,7 @@ const TierInsight: FC<Props> = ({ chartFilter }) => {
       const params = {
         ...chartFilter,
         dataInsightChartName: DataInsightChartType.TotalEntitiesByTier,
+        dataReportIndex: DataReportIndex.EntityReportDataIndex,
       };
       const response = await getAggregateChartData(params);
 
@@ -87,6 +89,7 @@ const TierInsight: FC<Props> = ({ chartFilter }) => {
     <Card
       className="data-insight-card"
       data-testid="entity-summary-card-percentage"
+      id={DataInsightChartType.TotalEntitiesByTier}
       loading={isLoading}
       title={
         <>
