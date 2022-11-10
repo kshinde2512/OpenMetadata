@@ -736,7 +736,7 @@ export const addCustomPropertiesForEntity = (
         }
     });
 
-    cy.get(`[data-row-key="${propertyName}"]`).find('[data-testid="value"]').should('contain', value)
+    cy.get(`[data-row-key="${propertyName}"]`).should('contain', value)
 };
 
 export const editCreatedProperty = (propertyName) => {

@@ -149,12 +149,11 @@ describe('Glossary page should work properly', () => {
       .should('be.visible')
       .type(NEW_GLOSSARY.description);
 
-    interceptURL('GET' , '/api/v1/search/query?q=***&from=0&size=10&index=user_search_index', 'getUsers')
     cy.get('[data-testid="add-reviewers"]')
       .scrollIntoView()
       .should('be.visible')
       .click();
-    verifyResponseStatusCode('@getUsers', 200)
+      
     cy.get('.tw-modal-container').should('be.visible');
 
     interceptURL('GET' , '/api/v1/search/suggest?q=*&index=user_search_index', 'searchUser')
