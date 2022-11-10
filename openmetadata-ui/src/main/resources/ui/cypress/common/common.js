@@ -521,7 +521,6 @@ export const addNewTagToEntity = (entityObj, term) => {
         .should('be.visible')
         .click();
     cy.get('[data-testid="tag-container"]')
-        .scrollIntoView()
         .contains(term)
         .should('exist');
 };
@@ -640,7 +639,7 @@ export const deleteSoftDeletedUser = (username) => {
         .should('be.visible')
         .click();
     cy.get('[data-testid="confirmation-text-input"]').type('DELETE');
-    interceptURL('GET', 'api/v1/users/*?hardDelete=true&recursive=false', 'hardDeleteUser')
+    interceptURL('DELETE', 'api/v1/users/*?hardDelete=true&recursive=false', 'hardDeleteUser')
     cy.get('[data-testid="confirm-button"]')
         .should('exist')
         .should('be.visible')
