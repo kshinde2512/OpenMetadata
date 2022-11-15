@@ -2,7 +2,7 @@ import { defineConfig } from 'cypress';
 import plugins from './cypress/plugins/index.js';
 
 export default defineConfig({
-  projectId: 'a9yxci',
+  projectId: 'w6gjxd',
   viewportWidth: 1240,
   viewportHeight: 660,
   watchForFileChanges: false,
@@ -13,6 +13,7 @@ export default defineConfig({
   e2e: {
     // We've imported your old cypress plugins here.
     // You may want to clean this up later by importing these.
+    experimentalSessionAndOrigin: true,
     setupNodeEvents(on, config) {
       return plugins(on, config);
     },

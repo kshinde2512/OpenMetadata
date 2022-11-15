@@ -24,6 +24,9 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
+import { interceptURL, verifyResponseStatusCode } from "../common/common";
+import { BASE_URL } from "../constants/constants";
+
 Cypress.Commands.add('loginByGoogleApi', () => {
   cy.log('Logging in to Google');
   cy.request({
@@ -79,3 +82,19 @@ Cypress.on('uncaught:exception', (err) => {
     return false;
   }
 });
+
+
+Cypress.Commands.add('login', (username, password) => {
+  cy.session([username, password], () => {
+    cy.visit('/');
+    cy.get('[id="email"]').should('be.visible').clear().type(username);
+    cy.get('[id="password"]').should('be.visible').clear().type(password);
+    interceptURL('POST', '/api/v1/users/login', 'login')
+    interceptURL('GET', '/api/v1/users/*', 'loadPage')
+    cy.get('.ant-btn').contains('Login').should('be.visible').click();
+    verifyResponseStatusCode('@login', 200)
+    verifyResponseStatusCode('@loadPage', 200)
+    cy.url().should('eq', `${BASE_URL}/my-data`)
+    cy.get('[data-testid="tables"]').should('be.visible')
+  })
+})
