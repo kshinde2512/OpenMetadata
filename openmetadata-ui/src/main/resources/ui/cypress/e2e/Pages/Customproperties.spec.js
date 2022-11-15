@@ -20,11 +20,11 @@ import {
 import { ENTITIES, LOGIN, uuid } from '../../constants/constants';
 
 describe('Custom Properties should work properly', () => {
-  before(() => {
-    // cy.clearLocalStorageSnapshot('localStorage');
-    // login(LOGIN.username, LOGIN.password);
-    // cy.saveLocalStorage('localstorage');
-  });
+  // before(() => {
+  //   // cy.clearLocalStorageSnapshot('localStorage');
+  //   // login(LOGIN.username, LOGIN.password);
+  //   // cy.saveLocalStorage('localstorage');
+  // });
   beforeEach(() => {
     // cy.log('Restoring local storage snapshot');
     // cy.restoreLocalStorage('localstorage');
