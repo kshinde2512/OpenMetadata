@@ -23,35 +23,10 @@ const pipelines = Object.values(SEARCH_ENTITY_PIPELINE);
 
 describe('MyData page should work', () => {
   beforeEach(() => {
-    cy.login();
+    cy.login()
     interceptURL('GET', '/api/v1/*/name/*', 'getEntityDetails');
     interceptURL('GET', '/api/v1/search/*', 'explorePageSearch');
   });
-
-  const checkRecentlyViewElement = () => {
-    verifyResponseStatusCode('@explorePageSearch', 200);
-    cy.get('[data-testid="table-data-card"] a')
-      .first()
-      .should('be.visible')
-      .scrollIntoView()
-      .click();
-    verifyResponseStatusCode('@getEntityDetails', 200);
-    cy.get('[data-testid="inactive-link"]')
-      .invoke('text')
-      .then((text) => {
-        cy.clickOnLogo();
-        cy.get(`[data-testid="Recently Viewed-${text}"]`)
-          .contains(text)
-          .should('be.visible')
-          .click();
-        cy.get('[data-testid="inactive-link"]')
-          .invoke('text')
-          .then((newText) => {
-            expect(newText).equal(text);
-          });
-        cy.clickOnLogo();
-      });
-  };
 
   const checkRecentlySearchElement = (term) => {
     searchEntity(term, false);
@@ -153,6 +128,11 @@ describe('MyData page should work', () => {
         entity.entityObj.serviceName,
         entity.entityObj.entity
       );
+      cy.get('[data-testid="inactive-link"]')
+        .invoke('text')
+        .then((newText) => {
+          expect(newText).equal(text);
+        });
       cy.clickOnLogo();
       cy.get(`[data-testid="Recently Viewed-${text}"]`)
         .contains(text)
