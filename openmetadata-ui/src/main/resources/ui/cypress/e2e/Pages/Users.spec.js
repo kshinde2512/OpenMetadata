@@ -127,7 +127,7 @@ describe('Admin flow should work properly', () => {
     restoreUser(adminName);
   });
   // Todo:- Flaky test, Ref:- https://cloud.cypress.io/projects/a9yxci/runs/9124/test-results/bd7584d2-b8a8-42a5-89c5-c05851b9ea76
-  it.skip('Permanently Delete Soft Deleted admin', () => {
+  it('Permanently Delete Soft Deleted admin', () => {
     softDeleteUser(adminName);
     deleteSoftDeletedUser(adminName);
   });
