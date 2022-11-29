@@ -20,6 +20,7 @@ const tables = Object.values(SEARCH_ENTITY_TABLE);
 const topics = Object.values(SEARCH_ENTITY_TOPIC);
 const dashboards = Object.values(SEARCH_ENTITY_DASHBOARD);
 const pipelines = Object.values(SEARCH_ENTITY_PIPELINE);
+const FOLLOWING_MYDATA_COUNT = 3;
 
 describe('MyData page should work', () => {
   beforeEach(() => {
@@ -172,44 +173,27 @@ describe('MyData page should work', () => {
     followAndOwnTheEntity(SEARCH_ENTITY_PIPELINE.pipeline_1);
   });
 
-  it.skip('My data and following section, CTA should work properly', () => {
-    const totalCount =
-      tables.length + pipelines.length + dashboards.length + topics.length;
+  it.only('My data and following section, CTA should work properly', () => {
 
-    cy.get('[data-testid="my-data-container"] > .ant-card > .ant-card-body')
-      .children()
-      .should('have.length', 8);
+    cy.get('[data-testid="my-data-container"]')
+      .find('[data-testid*="My data"]')
+      .should('have.length', FOLLOWING_MYDATA_COUNT);
     cy.get(
-      '[data-testid="following-data-container"] > .ant-card > .ant-card-body'
+      '[data-testid="following-data-container"]'
     )
-      .children()
-      .should('have.length', 8);
+      .find('[data-testid*="Following data"]')
+      .should('have.length', FOLLOWING_MYDATA_COUNT);
 
-    cy.get('[data-testid="my-data-total-count"]')
-      .invoke('text')
-      .then((text) => {
-        expect(text).equal(`(${totalCount})`);
-      });
-    cy.get('[data-testid="following-data-total-count"]')
-      .invoke('text')
-      .then((text) => {
-        expect(text).equal(`(${totalCount})`);
-      });
 
     cy.get('[data-testid="my-data-total-count"]').should('be.visible').click();
 
-    cy.intercept(
-      '/api/v1/search/query?q=*&from=0&size=*&sort_field=last_updated_timestamp&sort_order=desc&index=*'
-    ).as('searchApi');
-    cy.wait('@searchApi');
     cy.get('[data-testid="table-data-card"]').first().should('be.visible');
     cy.clickOnLogo();
 
     cy.get('[data-testid="following-data-total-count"]')
       .should('be.visible')
       .click();
-
-    cy.wait('@searchApi');
+      
     cy.get('[data-testid="table-data-card"]').first().should('be.visible');
     cy.clickOnLogo();
   });
