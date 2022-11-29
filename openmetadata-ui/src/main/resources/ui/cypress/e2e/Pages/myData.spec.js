@@ -173,7 +173,7 @@ describe('MyData page should work', () => {
     followAndOwnTheEntity(SEARCH_ENTITY_PIPELINE.pipeline_1);
   });
 
-  it.only('My data and following section, CTA should work properly', () => {
+  it('My data and following section, CTA should work properly', () => {
 
     cy.get('[data-testid="my-data-container"]')
       .find('[data-testid*="My data"]')
