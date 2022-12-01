@@ -12,7 +12,7 @@
  */
 
 import { BASE_URL } from '../../constants/constants';
-import { GOVERN_DETAILS, LEFT_PANEL_DETAILS, NAVBAR_DETAILS } from '../../constants/mydata.constants';
+import { LEFT_PANEL_DETAILS, NAVBAR_DETAILS, SETTINGS_LEFT_PANEL } from '../../constants/redirections.constants';
 
 const validateURL = (url) => {
   cy.url().should('contain', url);
@@ -23,27 +23,21 @@ describe('Mydata page assertions should work properly', () => {
     cy.login();
   });
 
-  it('Check redirection links for navbar', () => {
+  it('Check mydata redirection links on navbar', () => {
     Object.values(NAVBAR_DETAILS).map((navbar) => {
-      cy.get(navbar.testid).should('be.visible').click();
+      cy.get(navbar.testid).should('be.visible').click({animationDistanceThreshold: 10});
+      if(navbar.subMenu) {
+        cy.get(navbar.subMenu).should('be.visible').click();
+      }
+      //
+      cy.get('body').click();
       validateURL(navbar.url);
       cy.clickOnLogo();
       validateURL(`${BASE_URL}/my-data`);
     });
   });
 
-  it('Check redirection for Governance', () => {
-   Object.values(GOVERN_DETAILS).map((governance) => {
-    cy.get('[data-testid="governance"]').should('be.visible').click();
-    cy.wait(500);
-    cy.get(governance.testid).should('be.visible').click();
-    validateURL(governance.url);
-    cy.clickOnLogo();
-    validateURL(`${BASE_URL}/my-data`);
-  });
- });
-
-  it(`Check redirection links for left panel.`, () => {
+  it(`Check mydata redirection mydata links on left panel.`, () => {
     Object.values(LEFT_PANEL_DETAILS).map((leftpanel) => {
       cy.get(leftpanel.testid).should('be.visible').click();
       validateURL(leftpanel.url);
@@ -51,4 +45,13 @@ describe('Mydata page assertions should work properly', () => {
       validateURL(`${BASE_URL}/my-data`);
     });
   });
+
+  it('Check redirection links on settings page', () => {
+    cy.get(NAVBAR_DETAILS.settings.testid).should('be.visible').click();
+    Object.values(SETTINGS_LEFT_PANEL).map((settingsLeftPanel) => {
+      cy.get(settingsLeftPanel.testid).scrollIntoView().should('be.visible').click();
+      cy.wait(200);
+      validateURL(settingsLeftPanel.url);
+    });
+  })
 });
