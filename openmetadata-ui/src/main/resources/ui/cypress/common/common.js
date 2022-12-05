@@ -619,9 +619,12 @@ export const restoreUser = (username) => {
 };
 
 export const deleteSoftDeletedUser = (username) => {
+
+    interceptURL('GET', '/api/v1/users?fields=profile,teams,roles&include=*&limit=*', 'getSoftDeletedUser')
+    
     cy.get('.ant-switch-handle').should('exist').should('be.visible').click();
 
-    cy.wait(1000);
+    verifyResponseStatusCode('@getSoftDeletedUser', 200);
 
     cy.get(`[data-testid="delete-user-btn-${username}"]`)
         .should('exist')
