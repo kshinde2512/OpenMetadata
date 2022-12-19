@@ -34,7 +34,7 @@ describe('Advance search should work properly', () => {
   });
 
   Object.values(FIELDS).forEach((field) => {
-    it.only(`Verify advance search results for ${field.name} field and all condition`, () => {
+    it(`Verify advance search results for ${field.name} field and all condition`, () => {
       Object.values(CONDITIONS_MUST).forEach((condition) => {
         checkmustPaths(
           condition.name,
