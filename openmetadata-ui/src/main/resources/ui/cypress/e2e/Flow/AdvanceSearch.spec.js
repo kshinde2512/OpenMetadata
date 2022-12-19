@@ -11,10 +11,14 @@
  *  limitations under the License.
  */
 import {
-    addOwner, addTag, addTier, checkmustPaths,
+    addOwner,
+    addTag,
+    addTier, checkAddGroupWithOperator, checkmustPaths,
     checkmust_notPaths,
     CONDITIONS_MUST,
-    CONDITIONS_MUST_NOT, FIELDS
+    CONDITIONS_MUST_NOT,
+    FIELDS,
+    OPERATOR
 } from '../../common/advancedSearch';
 
 describe('Advance search should work properly', () => {
@@ -30,7 +34,7 @@ describe('Advance search should work properly', () => {
   });
 
   Object.values(FIELDS).forEach((field) => {
-    it(`Verify advance search results for ${field.name} field and all condition`, () => {
+    it.only(`Verify advance search results for ${field.name} field and all condition`, () => {
       Object.values(CONDITIONS_MUST).forEach((condition) => {
         checkmustPaths(
           condition.name,
@@ -48,6 +52,44 @@ describe('Advance search should work properly', () => {
           field.searchCriteriaFirstGroup,
           0,
           field.responseValueFirstGroup
+        );
+      });
+    });
+  });
+
+  Object.values(FIELDS).forEach((field) => {
+    Object.values(OPERATOR).forEach((operator) => {
+      it(`Verify Add group functionality for ${field.name} field with ${operator.name} operator & condition ${CONDITIONS_MUST.equalTo.name} and ${CONDITIONS_MUST_NOT.notEqualTo.name} `, () => {
+        checkAddGroupWithOperator(
+          CONDITIONS_MUST.equalTo.name,
+          CONDITIONS_MUST_NOT.notEqualTo.name,
+          field.testid,
+          field.searchCriteriaFirstGroup,
+          field.searchCriteriaSecondGroup,
+          0,
+          1,
+          operator.index,
+          CONDITIONS_MUST.equalTo.filter,
+          CONDITIONS_MUST_NOT.notEqualTo.filter,
+          field.responseValueFirstGroup,
+          field.responseValueSecondGroup
+        );
+      });
+
+      it(`Verify Add group functionality for ${field.name} field with ${operator.name} operator & condition ${CONDITIONS_MUST.anyIn.name} and ${CONDITIONS_MUST_NOT.notIn.name} `, () => {
+        checkAddGroupWithOperator(
+          CONDITIONS_MUST.anyIn.name,
+          CONDITIONS_MUST_NOT.notIn.name,
+          field.testid,
+          field.searchCriteriaFirstGroup,
+          field.searchCriteriaSecondGroup,
+          0,
+          1,
+          operator.index,
+          CONDITIONS_MUST.anyIn.filter,
+          CONDITIONS_MUST_NOT.notIn.filter,
+          field.responseValueFirstGroup,
+          field.responseValueSecondGroup
         );
       });
     });

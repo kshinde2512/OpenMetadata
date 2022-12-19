@@ -18,38 +18,33 @@ const dropdown_group_1 =
 const dropdown_group_2 =
   ':nth-child(7) > :nth-child(1) > .ant-select-dropdown > :nth-child(1) > :nth-child(1) > .rc-virtual-list > .rc-virtual-list-holder > :nth-child(1) > .rc-virtual-list-holder-inner > .ant-select-item';
 
-export const OPERATOR = {
-  AND: {
-    name: 'AND',
-    index: 1,
-  },
-  OR: {
-    name: 'OR',
-    index: 2,
-  },
-};
-
 export const CONDITIONS_MUST = {
   equalTo: {
     name: '==',
+    filter: 'must',
   },
   anyIn: {
     name: 'Any in',
+    filter: 'must',
   },
   contains: {
     name: 'Contains',
+    filter: 'must',
   },
 };
 
 export const CONDITIONS_MUST_NOT = {
   notEqualTo: {
     name: '!=',
+    filter: 'must_not',
   },
   notIn: {
     name: 'Not in',
+    filter: 'must_not',
   },
   notContains: {
     name: 'Not contains',
+    filter: 'must_not',
   },
 };
 
@@ -59,43 +54,64 @@ export const FIELDS = {
     testid: '[title="Owner"]',
     searchCriteriaFirstGroup: 'admin',
     responseValueFirstGroup: `"name":"admin"`,
-    searchCriteriaSecondGroup: 'aaron_singh2',
+    searchCriteriaSecondGroup: 'Aaron Singh',
+    responseValueSecondGroup: 'Aaron',
   },
   Tags: {
     name: 'Tags',
     testid: '[title="Tags"]',
     searchCriteriaFirstGroup: 'PersonalData.Personal',
-    responseValueFirstGroup: `"tagFQN":"PersonalData.Personal"`,
+    responseValueFirstGroup: '"tagFQN":"PersonalData.Personal"',
+    searchCriteriaSecondGroup: 'PersonalData.SpecialCategory',
+    responseValueSecondGroup: '"tagFQN":"PersonalData.SpecialCategory"',
   },
   Tiers: {
     name: 'Tier',
     testid: '[title="Tier"]',
     searchCriteriaFirstGroup: 'Tier.Tier1',
-    responseSearchCriteriaFirstGroup: `"tagFQN":"Tier.Tier1"`,
+    responseValueFirstGroup: '"tagFQN":"Tier.Tier1"',
+    searchCriteriaSecondGroup: 'Tier.Tier2',
+    responseValueSecondGroup: '"tagFQN":"Tier.Tier2"',
   },
-  Service: {
-    name: 'Service',
-    testid: '[title="Service"]',
-    searchCriteriaFirstGroup: 'sample_data',
-    responseValueFirstGroup: `"name":"sample_data"`,
-  },
-  Database: {
-    name: 'Database',
-    testid: '[title="Database"]',
-    searchCriteriaFirstGroup: 'ecommerce_db',
-    responseValueFirstGroup: `"name":"ecommerce_db"`,
-  },
-  Database_Schema: {
-    name: 'Database Schema',
-    testid: '[title="Database Schema"]',
-    searchCriteriaFirstGroup: 'shopify',
-    responseValueFirstGroup: `"name":"shopify"`,
-  },
+  // Service: {
+  //   name: 'Service',
+  //   testid: '[title="Service"]',
+  //   searchCriteriaFirstGroup: 'sample_data',
+  //   responseValueFirstGroup: `"name":"sample_data"`,
+  //   searchCriteriaSecondGroup: 'Aaron Singh',
+  // },
+  // Database: {
+  //   name: 'Database',
+  //   testid: '[title="Database"]',
+  //   searchCriteriaFirstGroup: 'ecommerce_db',
+  //   responseValueFirstGroup: `"name":"ecommerce_db"`,
+  //   searchCriteriaSecondGroup: 'Aaron Singh',
+  // },
+  // Database_Schema: {
+  //   name: 'Database Schema',
+  //   testid: '[title="Database Schema"]',
+  //   searchCriteriaFirstGroup: 'shopify',
+  //   responseValueFirstGroup: `"name":"shopify"`,
+  //   searchCriteriaSecondGroup: 'Aaron Singh',
+  // },
   Column: {
-    name: 'column name',
+    name: 'Column',
     testid: '[title="Column"]',
     searchCriteriaFirstGroup: 'SKU',
-    responseValueFirstGroup: `"name":"SKU"`,
+    responseValueFirstGroup: '"name":"SKU"',
+    searchCriteriaSecondGroup: 'api_client_id',
+    responseValueSecondGroup: '"name":"api_client_id"',
+  },
+};
+
+export const OPERATOR = {
+  AND: {
+    name: 'AND',
+    index: 1,
+  },
+  OR: {
+    name: 'OR',
+    index: 2,
   },
 };
 
@@ -345,22 +361,21 @@ export const checkAddGroupWithOperator = (
   condition_1,
   condition_2,
   fieldid,
-  fieldname,
   searchCriteria_1,
   searchCriteria_2,
   index_1,
   index_2,
-  operatorindex
+  operatorindex,
+  filter_1,
+  filter_2,
+  response_1,
+  response_2
 ) => {
   goToAdvanceSearch();
   //Click on field dropdown
   cy.get('.rule--field').eq(index_1).should('be.visible').click();
   //Select owner fields
-  cy.get('.ant-select-item-option-content')
-    .contains(fieldname)
-    .scrollIntoView()
-    .should('be.visible')
-    .click();
+  cy.get(fieldid).eq(0).should('be.visible').click();
   //Select the condition
   cy.get('.rule--operator').eq(index_1).should('be.visible').click();
 
@@ -400,7 +415,7 @@ export const checkAddGroupWithOperator = (
   cy.get('.ant-modal-header').click();
 
   //Select add-group button
-  cy.get('[data-testid="add-group"]').eq(0).should('be.visible').click();
+  cy.get('.action--ADD-GROUP').eq(0).should('be.visible').click();
 
   //Select the AND/OR condition
   cy.get(
@@ -410,11 +425,7 @@ export const checkAddGroupWithOperator = (
   //Click on field dropdown
   cy.get('.rule--field').eq(index_2).should('be.visible').click();
 
-  cy.get(`.ant-select-dropdown  [label="${fieldid}"]`)
-    .contains(fieldname)
-    .scrollIntoView()
-    .should('be.visible')
-    .click({ force: true });
+  cy.get(fieldid).eq(2).should('be.visible').click();
 
   //Select the condition
   cy.get('.rule--operator').eq(index_2).should('be.visible').click();
@@ -444,14 +455,34 @@ export const checkAddGroupWithOperator = (
   cy.wait(1000);
   //if condition has a dropdown then select value from dropdown
   cy.get('body').then(($body) => {
-    if ($body.find(dropdown_group_2).length) {
-      cy.get(`[title = '${searchCriteria_2}']`)
-        .should('be.visible')
-        .trigger('mouseover')
-        .trigger('click');
+    if (
+      $body.find(dropdown_group_2).length &&
+      searchCriteria_2 === 'Tier.Tier2'
+    ) {
+      cy.get(`[title = "${searchCriteria_2}"]`)
+        .eq(1)
+        .contains(searchCriteria_2)
+        .click({ force: true });
+    } else if ($body.find(dropdown_group_2).length) {
+      cy.get(`[title = "${searchCriteria_2}"]`)
+        .contains(searchCriteria_2)
+        .click();
     }
   });
+  cy.log('HERE :', filter_1, response_1, filter_2, response_2);
 
-  // //Click on apply filter
+  interceptURL(
+    'GET',
+    `/api/v1/search/query?q=&index=*&from=0&size=10&deleted=false&query_filter=*${filter_1}*${searchCriteria_1}*${filter_2}*${searchCriteria_2}*&sort_field=_score&sort_order=desc`,
+    'search'
+  );
+
+  //Click on apply filter
   cy.get('.ant-btn-primary').contains('Apply').click();
+
+  cy.wait('@search').should(({ request, response }) => {
+    const resBody = JSON.stringify(response.body);
+    expect(request.url).to.contain(response_1);
+    expect(resBody).to.not.include(response_2);
+  });
 };
