@@ -54,8 +54,8 @@ export const FIELDS = {
     testid: '[title="Owner"]',
     searchCriteriaFirstGroup: 'admin',
     responseValueFirstGroup: `"name":"admin"`,
-    searchCriteriaSecondGroup: 'Aaron Singh',
-    responseValueSecondGroup: 'Aaron',
+    searchCriteriaSecondGroup: 'aaron_singh2',
+    responseValueSecondGroup: `"name":"aaron_singh2"`,
   },
   Tags: {
     name: 'Tags',
@@ -154,10 +154,6 @@ export const searchForField = (condition, fieldid, searchCriteria, index) => {
         .trigger('mouseover')
         .trigger('click');
     }
-    cy.wait(1000);
-    // if ($body.find('.ant-select-dropdown').length) {
-    //   cy.get('.ant-modal-body').click();
-    // }
   });
 };
 
@@ -168,7 +164,10 @@ export const goToAdvanceSearch = () => {
     .and('be.visible')
     .click();
 
-  cy.get('[data-testid="tables-tab"]').should('exist').and('be.visible');
+  cy.get('[data-testid="tables-tab"]')
+    .scrollIntoView()
+    .should('exist')
+    .and('be.visible');
   //Click on advance search button
   cy.get('[data-testid="advance-search-button"]').should('be.visible').click();
   cy.get('.ant-modal-content')
@@ -317,13 +316,12 @@ export const addTier = (tier) => {
     .should('be.visible')
     .click();
 
-  cy.get('[data-testid="tier-dropdown"]')
-    .invoke('text')
-    .then((text) => {
-      expect(text).to.contain(tier);
-    });
+  cy.wait(1000);
 
-  cy.get('[data-testid="entity-tags"]').should('contain', tier);
+  cy.get('[data-testid="tags"] > [data-testid="add-tag"]').should(
+    'contain',
+    'Tier1'
+  );
 };
 
 export const addTag = (tag) => {
@@ -482,7 +480,136 @@ export const checkAddGroupWithOperator = (
 
   cy.wait('@search').should(({ request, response }) => {
     const resBody = JSON.stringify(response.body);
-    expect(request.url).to.contain(response_1);
+    expect(request.url).to.contain(searchCriteria_1);
+    expect(resBody).to.not.include(response_2);
+  });
+};
+
+export const checkAddRuleWithOperator = (
+  condition_1,
+  condition_2,
+  fieldid,
+  searchCriteria_1,
+  searchCriteria_2,
+  index_1,
+  index_2,
+  operatorindex,
+  filter_1,
+  filter_2,
+  response_1,
+  response_2
+) => {
+  goToAdvanceSearch();
+  //Click on field dropdown
+  cy.get('.rule--field').eq(index_1).should('be.visible').click();
+  //Select owner fields
+  cy.get(fieldid).eq(0).should('be.visible').click();
+  //Select the condition
+  cy.get('.rule--operator').eq(index_1).should('be.visible').click();
+
+  cy.get(`[label="${condition_1}"]`).eq(index_1).should('be.visible').click();
+  //Verify the condition
+  cy.get('.rule--operator .ant-select-selection-item')
+    .should('be.visible')
+    .should('contain', `${condition_1}`);
+  cy.wait(500);
+
+  //Verify the search criteria for the condition
+  cy.get('body').then(($body) => {
+    if ($body.find('.ant-col > .ant-input').length) {
+      cy.get('.ant-col > .ant-input')
+        .eq(index_1)
+        .should('be.visible')
+        .type(searchCriteria_1);
+    } else {
+      cy.get('.widget--widget > .ant-select > .ant-select-selector')
+        .eq(index_1)
+        .should('be.visible')
+        .type(searchCriteria_1);
+    }
+  });
+
+  cy.wait(1000);
+  //if condition has a dropdown then select value from dropdown
+  cy.get('body').then(($body) => {
+    if ($body.find(dropdown_group_1).length) {
+      cy.get(`[title = '${searchCriteria_1}']`)
+        .should('be.visible')
+        .trigger('mouseover')
+        .trigger('click');
+    }
+  });
+  //To close the dropdown for anyin and notin condition
+  cy.get('.ant-modal-header').click();
+
+  //Select add-group button
+  cy.get('.action--ADD-RULE').eq(1).should('be.visible').click();
+
+  //Select the AND/OR condition
+  cy.get(
+    `.group--conjunctions > .ant-btn-group > :nth-child(${operatorindex})`
+  ).click();
+
+  //Click on field dropdown
+  cy.get('.rule--field').eq(index_2).should('be.visible').click();
+
+  cy.get(fieldid).eq(2).should('be.visible').click();
+
+  //Select the condition
+  cy.get('.rule--operator').eq(index_2).should('be.visible').click();
+
+  cy.get(`[label="${condition_2}"]`).eq(index_2).should('be.visible').click();
+  //Verify the condition
+  cy.get('.rule--operator .ant-select-selection-item')
+    .should('be.visible')
+    .should('contain', `${condition_2}`);
+  cy.wait(500);
+
+  //Verify the search criteria for the condition
+  cy.get('body').then(($body) => {
+    if ($body.find('.ant-col > .ant-input').length) {
+      cy.get('.ant-col > .ant-input')
+        .eq(index_2)
+        .should('be.visible')
+        .type(searchCriteria_2);
+    } else {
+      cy.get('.widget--widget > .ant-select > .ant-select-selector')
+        .eq(index_2)
+        .should('be.visible')
+        .type(searchCriteria_2);
+    }
+  });
+
+  cy.wait(1000);
+  //if condition has a dropdown then select value from dropdown
+  cy.get('body').then(($body) => {
+    if (
+      $body.find(dropdown_group_2).length &&
+      searchCriteria_2 === 'Tier.Tier2'
+    ) {
+      cy.get(`[title = "${searchCriteria_2}"]`)
+        .eq(1)
+        .contains(searchCriteria_2)
+        .click({ force: true });
+    } else if ($body.find(dropdown_group_2).length) {
+      cy.get(`[title = "${searchCriteria_2}"]`)
+        .contains(searchCriteria_2)
+        .click();
+    }
+  });
+
+  interceptURL(
+    'GET',
+    `/api/v1/search/query?q=&index=*&from=0&size=10&deleted=false&query_filter=*${filter_1}*${searchCriteria_1}*${filter_2}*${searchCriteria_2}*&sort_field=_score&sort_order=desc`,
+    'search'
+  );
+
+  //Click on apply filter
+  cy.get('.ant-btn-primary').contains('Apply').click();
+
+  cy.wait('@search').should(({ request, response }) => {
+    const resBody = JSON.stringify(response.body);
+    expect(request.url).to.contain(searchCriteria_1);
     expect(resBody).to.not.include(response_2);
   });
 };

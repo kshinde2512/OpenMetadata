@@ -13,7 +13,10 @@
 import {
     addOwner,
     addTag,
-    addTier, checkAddGroupWithOperator, checkmustPaths,
+    addTier,
+    checkAddGroupWithOperator,
+    checkAddRuleWithOperator,
+    checkmustPaths,
     checkmust_notPaths,
     CONDITIONS_MUST,
     CONDITIONS_MUST_NOT,
@@ -27,7 +30,7 @@ describe('Advance search should work properly', () => {
     cy.get('[data-testid="appbar-item-explore"]').and('be.visible').click();
   });
 
-  it('Pre-requisite for advance search', () => {
+  it.skip('Pre-requisite for advance search', () => {
     addOwner(FIELDS.Owner.searchCriteriaFirstGroup);
     addTier(FIELDS.Tiers.searchCriteriaFirstGroup);
     addTag(FIELDS.Tags.searchCriteriaFirstGroup);
@@ -88,6 +91,44 @@ describe('Advance search should work properly', () => {
           operator.index,
           CONDITIONS_MUST.anyIn.filter,
           CONDITIONS_MUST_NOT.notIn.filter,
+          field.responseValueFirstGroup,
+          field.responseValueSecondGroup
+        );
+      });
+
+      it(`Verify Add group functionality for ${field.name} field with ${operator.name} operator & condition ${CONDITIONS_MUST.contains.name} and ${CONDITIONS_MUST_NOT.notContains.name} `, () => {
+        checkAddGroupWithOperator(
+          CONDITIONS_MUST.contains.name,
+          CONDITIONS_MUST_NOT.notContains.name,
+          field.testid,
+          field.searchCriteriaFirstGroup,
+          field.searchCriteriaSecondGroup,
+          0,
+          1,
+          operator.index,
+          CONDITIONS_MUST.contains.filter,
+          CONDITIONS_MUST_NOT.notContains.filter,
+          field.responseValueFirstGroup,
+          field.responseValueSecondGroup
+        );
+      });
+    });
+  });
+
+  Object.values(FIELDS).forEach((field) => {
+    Object.values(OPERATOR).forEach((operator) => {
+      it(`Verify Add Rule functionality for ${field.name} field with ${operator.name} operator & condition ${CONDITIONS_MUST.equalTo.name} and ${CONDITIONS_MUST_NOT.notEqualTo.name} `, () => {
+        checkAddRuleWithOperator(
+          CONDITIONS_MUST.equalTo.name,
+          CONDITIONS_MUST_NOT.notEqualTo.name,
+          field.testid,
+          field.searchCriteriaFirstGroup,
+          field.searchCriteriaSecondGroup,
+          0,
+          1,
+          operator.index,
+          CONDITIONS_MUST.equalTo.filter,
+          CONDITIONS_MUST_NOT.notEqualTo.filter,
           field.responseValueFirstGroup,
           field.responseValueSecondGroup
         );
