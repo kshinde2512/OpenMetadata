@@ -24,16 +24,70 @@ import {
     OPERATOR
 } from '../../common/advancedSearch';
 
+import {
+    interceptURL, mySqlConnectionInput, testServiceCreationAndIngestion, verifyResponseStatusCode
+} from '../../common/common';
+
+import { API_SERVICE } from '../../constants/constants';
+
+import { MYSQL } from '../../constants/service.constants';
+
+const service_name = MYSQL.serviceName;
+
 describe('Advance search should work properly', () => {
   beforeEach(() => {
     cy.login();
     cy.get('[data-testid="appbar-item-explore"]').and('be.visible').click();
   });
 
-  it.skip('Pre-requisite for advance search', () => {
+  it('Pre-requisite for advance search', () => {
     addOwner(FIELDS.Owner.searchCriteriaFirstGroup);
     addTier(FIELDS.Tiers.searchCriteriaFirstGroup);
     addTag(FIELDS.Tags.searchCriteriaFirstGroup);
+  });
+
+  it('Mysql ingestion', () => {
+    interceptURL(
+      'GET',
+      'api/v1/teams/name/Organization?fields=*',
+      'getSettingsPage'
+    );
+    cy.get('[data-testid="appbar-item-settings"]').should('be.visible').click();
+    verifyResponseStatusCode('@getSettingsPage', 200);
+    // Services page
+    interceptURL('GET', '/api/v1/services/*', 'getServiceList');
+    cy.get('[data-testid="global-setting-left-panel"]')
+      .contains(MYSQL.database)
+      .should('be.visible')
+      .click();
+
+    verifyResponseStatusCode('@getServiceList', 200);
+
+    cy.get('[data-testid="add-service-button"]').should('be.visible').click();
+
+    // Add new service page
+    cy.url().should('include', '/add-service');
+    cy.get('[data-testid="header"]').should('be.visible');
+    cy.contains('Add New Service').should('be.visible');
+    cy.get('[data-testid="service-category"]').should('be.visible');
+
+    const addIngestionInput = () => {
+      // cy.get('[data-testid="filter-pattern-container"]').first().scrollIntoView().should('be.visible');
+      cy.get('[data-testid="schema-filter-pattern-checkbox"]')
+        .invoke('show')
+        .trigger('mouseover')
+        .check();
+      cy.get('[data-testid="filter-pattern-includes-schema"]')
+        .should('be.visible')
+        .type(Cypress.env('mysqlDatabaseSchema'));
+    };
+
+    testServiceCreationAndIngestion(
+      MYSQL.serviceType,
+      mySqlConnectionInput,
+      addIngestionInput,
+      service_name
+    );
   });
 
   Object.values(FIELDS).forEach((field) => {
@@ -133,6 +187,48 @@ describe('Advance search should work properly', () => {
           field.responseValueSecondGroup
         );
       });
+
+      it(`Verify Add Rule functionality for ${field.name} field with ${operator.name} operator & condition ${CONDITIONS_MUST.anyIn.name} and ${CONDITIONS_MUST_NOT.notIn.name} `, () => {
+        checkAddRuleWithOperator(
+          CONDITIONS_MUST.anyIn.name,
+          CONDITIONS_MUST_NOT.notIn.name,
+          field.testid,
+          field.searchCriteriaFirstGroup,
+          field.searchCriteriaSecondGroup,
+          0,
+          1,
+          operator.index,
+          CONDITIONS_MUST.anyIn.filter,
+          CONDITIONS_MUST_NOT.notIn.filter,
+          field.responseValueFirstGroup,
+          field.responseValueSecondGroup
+        );
+      });
+
+      it(`Verify Add Rule functionality for ${field.name} field with ${operator.name} operator & condition ${CONDITIONS_MUST.contains.name} and ${CONDITIONS_MUST_NOT.notContains.name} `, () => {
+        checkAddRuleWithOperator(
+          CONDITIONS_MUST.contains.name,
+          CONDITIONS_MUST_NOT.notContains.name,
+          field.testid,
+          field.searchCriteriaFirstGroup,
+          field.searchCriteriaSecondGroup,
+          0,
+          1,
+          operator.index,
+          CONDITIONS_MUST.contains.filter,
+          CONDITIONS_MUST_NOT.notContains.filter,
+          field.responseValueFirstGroup,
+          field.responseValueSecondGroup
+        );
+      });
     });
+  });
+
+  it('Delete Created Service', () => {
+    deleteCreatedService(
+      MYSQL.database,
+      service_name,
+      API_SERVICE.databaseServices
+    );
   });
 });

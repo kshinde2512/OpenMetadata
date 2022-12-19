@@ -10,6 +10,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+import { MYSQL } from '../constants/service.constants';
 import { interceptURL, verifyResponseStatusCode } from './common';
 
 const dropdown_group_1 =
@@ -73,27 +74,30 @@ export const FIELDS = {
     searchCriteriaSecondGroup: 'Tier.Tier2',
     responseValueSecondGroup: '"tagFQN":"Tier.Tier2"',
   },
-  // Service: {
-  //   name: 'Service',
-  //   testid: '[title="Service"]',
-  //   searchCriteriaFirstGroup: 'sample_data',
-  //   responseValueFirstGroup: `"name":"sample_data"`,
-  //   searchCriteriaSecondGroup: 'Aaron Singh',
-  // },
-  // Database: {
-  //   name: 'Database',
-  //   testid: '[title="Database"]',
-  //   searchCriteriaFirstGroup: 'ecommerce_db',
-  //   responseValueFirstGroup: `"name":"ecommerce_db"`,
-  //   searchCriteriaSecondGroup: 'Aaron Singh',
-  // },
-  // Database_Schema: {
-  //   name: 'Database Schema',
-  //   testid: '[title="Database Schema"]',
-  //   searchCriteriaFirstGroup: 'shopify',
-  //   responseValueFirstGroup: `"name":"shopify"`,
-  //   searchCriteriaSecondGroup: 'Aaron Singh',
-  // },
+  Service: {
+    name: 'Service',
+    testid: '[title="Service"]',
+    searchCriteriaFirstGroup: 'sample_data',
+    responseValueFirstGroup: `"name":"sample_data"`,
+    searchCriteriaSecondGroup: MYSQL.serviceName,
+    responseValueSecondGroup: `"name":"${MYSQL.serviceName}"`,
+  },
+  Database: {
+    name: 'Database',
+    testid: '[title="Database"]',
+    searchCriteriaFirstGroup: 'ecommerce_db',
+    responseValueFirstGroup: `"name":"ecommerce_db"`,
+    searchCriteriaSecondGroup: 'default',
+    responseValueSecondGroup: `"name":"default"`,
+  },
+  Database_Schema: {
+    name: 'Database Schema',
+    testid: '[title="Database Schema"]',
+    searchCriteriaFirstGroup: 'shopify',
+    responseValueFirstGroup: `"name":"shopify"`,
+    searchCriteriaSecondGroup: 'cypress_integrations_test_db',
+    responseValueSecondGroup: `"name":"cypress_integrations_test_db"`,
+  },
   Column: {
     name: 'Column',
     testid: '[title="Column"]',
