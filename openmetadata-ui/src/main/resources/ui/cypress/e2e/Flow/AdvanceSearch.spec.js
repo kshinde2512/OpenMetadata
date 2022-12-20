@@ -31,7 +31,6 @@ import {
     verifyResponseStatusCode
 } from '../../common/common';
 
-import { API_SERVICE } from '../../constants/constants';
 
 import { MYSQL } from '../../constants/service.constants';
 
@@ -119,6 +118,10 @@ describe('Advance search should work properly for all fields', () => {
 });
 
 describe('Advance search should work properly for Add Group functionality', () => {
+  beforeEach(() => {
+    cy.login();
+    cy.get('[data-testid="appbar-item-explore"]').and('be.visible').click();
+  });
   Object.values(OPERATOR).forEach((operator) => {
     it(`Verify Add group functionality for All field with ${operator.name} operator & condition ${CONDITIONS_MUST.equalTo.name} and ${CONDITIONS_MUST_NOT.notEqualTo.name} `, () => {
       Object.values(FIELDS).forEach((field) => {
@@ -180,6 +183,10 @@ describe('Advance search should work properly for Add Group functionality', () =
 });
 
 describe('Advance search should work properly for Add Rule functionality', () => {
+  beforeEach(() => {
+    cy.login();
+    cy.get('[data-testid="appbar-item-explore"]').and('be.visible').click();
+  });
   Object.values(OPERATOR).forEach((operator) => {
     it(`Verify Add Rule functionality for All field with ${operator.name} operator & condition ${CONDITIONS_MUST.equalTo.name} and ${CONDITIONS_MUST_NOT.notEqualTo.name} `, () => {
       Object.values(FIELDS).forEach((field) => {
@@ -240,12 +247,12 @@ describe('Advance search should work properly for Add Rule functionality', () =>
   });
 });
 
-after(() => {
-  it('Delete Created Service', () => {
-    deleteCreatedService(
-      MYSQL.database,
-      service_name,
-      API_SERVICE.databaseServices
-    );
-  });
-});
+// after(() => {
+//   it('Delete Created Service', () => {
+//     deleteCreatedService(
+//       MYSQL.database,
+//       service_name,
+//       API_SERVICE.databaseServices
+//     );
+//   });
+// });

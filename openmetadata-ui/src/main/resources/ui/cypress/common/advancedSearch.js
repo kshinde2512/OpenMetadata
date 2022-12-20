@@ -177,10 +177,6 @@ export const goToAdvanceSearch = () => {
 
   cy.wait(500);
 
-  cy.get('.ant-modal-content')
-    .should('be.visible')
-    .should('contain', 'Advanced Search');
-
   //Click on reset button to reset any previous search activity
   cy.get('.ant-btn').contains('Reset').click();
   cy.wait(1000);
