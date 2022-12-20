@@ -174,6 +174,9 @@ export const goToAdvanceSearch = () => {
     .and('be.visible');
   //Click on advance search button
   cy.get('[data-testid="advance-search-button"]').should('be.visible').click();
+
+  cy.wait(500);
+
   cy.get('.ant-modal-content')
     .should('be.visible')
     .should('contain', 'Advanced Search');

@@ -25,7 +25,10 @@ import {
 } from '../../common/advancedSearch';
 
 import {
-    interceptURL, mySqlConnectionInput, testServiceCreationAndIngestion, verifyResponseStatusCode
+    interceptURL,
+    mySqlConnectionInput,
+    testServiceCreationAndIngestion,
+    verifyResponseStatusCode
 } from '../../common/common';
 
 import { API_SERVICE } from '../../constants/constants';
@@ -114,9 +117,9 @@ describe('Advance search should work properly', () => {
     });
   });
 
-  Object.values(FIELDS).forEach((field) => {
-    Object.values(OPERATOR).forEach((operator) => {
-      it(`Verify Add group functionality for ${field.name} field with ${operator.name} operator & condition ${CONDITIONS_MUST.equalTo.name} and ${CONDITIONS_MUST_NOT.notEqualTo.name} `, () => {
+  Object.values(OPERATOR).forEach((operator) => {
+    it(`Verify Add group functionality for All field with ${operator.name} operator & condition ${CONDITIONS_MUST.equalTo.name} and ${CONDITIONS_MUST_NOT.notEqualTo.name} `, () => {
+      Object.values(FIELDS).forEach((field) => {
         checkAddGroupWithOperator(
           CONDITIONS_MUST.equalTo.name,
           CONDITIONS_MUST_NOT.notEqualTo.name,
@@ -132,8 +135,10 @@ describe('Advance search should work properly', () => {
           field.responseValueSecondGroup
         );
       });
+    });
 
-      it(`Verify Add group functionality for ${field.name} field with ${operator.name} operator & condition ${CONDITIONS_MUST.anyIn.name} and ${CONDITIONS_MUST_NOT.notIn.name} `, () => {
+    it(`Verify Add group functionality for All field with ${operator.name} operator & condition ${CONDITIONS_MUST.anyIn.name} and ${CONDITIONS_MUST_NOT.notIn.name} `, () => {
+      Object.values(FIELDS).forEach((field) => {
         checkAddGroupWithOperator(
           CONDITIONS_MUST.anyIn.name,
           CONDITIONS_MUST_NOT.notIn.name,
@@ -149,8 +154,10 @@ describe('Advance search should work properly', () => {
           field.responseValueSecondGroup
         );
       });
+    });
 
-      it(`Verify Add group functionality for ${field.name} field with ${operator.name} operator & condition ${CONDITIONS_MUST.contains.name} and ${CONDITIONS_MUST_NOT.notContains.name} `, () => {
+    it(`Verify Add group functionality for All field with ${operator.name} operator & condition ${CONDITIONS_MUST.contains.name} and ${CONDITIONS_MUST_NOT.notContains.name} `, () => {
+      Object.values(FIELDS).forEach((field) => {
         checkAddGroupWithOperator(
           CONDITIONS_MUST.contains.name,
           CONDITIONS_MUST_NOT.notContains.name,
@@ -169,9 +176,9 @@ describe('Advance search should work properly', () => {
     });
   });
 
-  Object.values(FIELDS).forEach((field) => {
-    Object.values(OPERATOR).forEach((operator) => {
-      it(`Verify Add Rule functionality for ${field.name} field with ${operator.name} operator & condition ${CONDITIONS_MUST.equalTo.name} and ${CONDITIONS_MUST_NOT.notEqualTo.name} `, () => {
+  Object.values(OPERATOR).forEach((operator) => {
+    it(`Verify Add Rule functionality for All field with ${operator.name} operator & condition ${CONDITIONS_MUST.equalTo.name} and ${CONDITIONS_MUST_NOT.notEqualTo.name} `, () => {
+      Object.values(FIELDS).forEach((field) => {
         checkAddRuleWithOperator(
           CONDITIONS_MUST.equalTo.name,
           CONDITIONS_MUST_NOT.notEqualTo.name,
@@ -187,8 +194,10 @@ describe('Advance search should work properly', () => {
           field.responseValueSecondGroup
         );
       });
+    });
 
-      it(`Verify Add Rule functionality for ${field.name} field with ${operator.name} operator & condition ${CONDITIONS_MUST.anyIn.name} and ${CONDITIONS_MUST_NOT.notIn.name} `, () => {
+    it(`Verify Add Rule functionality for All field with ${operator.name} operator & condition ${CONDITIONS_MUST.anyIn.name} and ${CONDITIONS_MUST_NOT.notIn.name} `, () => {
+      Object.values(FIELDS).forEach((field) => {
         checkAddRuleWithOperator(
           CONDITIONS_MUST.anyIn.name,
           CONDITIONS_MUST_NOT.notIn.name,
@@ -204,8 +213,10 @@ describe('Advance search should work properly', () => {
           field.responseValueSecondGroup
         );
       });
+    });
 
-      it(`Verify Add Rule functionality for ${field.name} field with ${operator.name} operator & condition ${CONDITIONS_MUST.contains.name} and ${CONDITIONS_MUST_NOT.notContains.name} `, () => {
+    it(`Verify Add Rule functionality for All field with ${operator.name} operator & condition ${CONDITIONS_MUST.contains.name} and ${CONDITIONS_MUST_NOT.notContains.name} `, () => {
+      Object.values(FIELDS).forEach((field) => {
         checkAddRuleWithOperator(
           CONDITIONS_MUST.contains.name,
           CONDITIONS_MUST_NOT.notContains.name,
