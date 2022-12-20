@@ -175,10 +175,10 @@ export const goToAdvanceSearch = () => {
   //Click on advance search button
   cy.get('[data-testid="advance-search-button"]').should('be.visible').click();
 
-  cy.wait(500);
+  cy.wait(1000);
 
   //Click on reset button to reset any previous search activity
-  cy.get('.ant-btn').contains('Reset').click();
+  cy.get('button').contains('Reset').click();
   cy.wait(1000);
 };
 
