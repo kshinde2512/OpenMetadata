@@ -55,8 +55,8 @@ export const FIELDS = {
     testid: '[title="Owner"]',
     searchCriteriaFirstGroup: 'admin',
     responseValueFirstGroup: `"name":"admin"`,
-    searchCriteriaSecondGroup: 'aaron_singh2',
-    responseValueSecondGroup: `"name":"aaron_singh2"`,
+    searchCriteriaSecondGroup: 'Aaron Singh',
+    responseValueSecondGroup: "Aaron",
   },
   Tags: {
     name: 'Tags',
