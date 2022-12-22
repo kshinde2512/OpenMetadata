@@ -241,7 +241,7 @@ export const addOwner = (ownerName) => {
     .and('be.visible')
     .click();
 
-  cy.get('#tabledatacard0Title')
+    cy.get('#tabledatacard0-title')
     .first()
     .scrollIntoView()
     .should('be.visible')
@@ -301,7 +301,7 @@ export const addTier = (tier) => {
     .and('be.visible')
     .click();
 
-  cy.get('#tabledatacard0Title')
+    cy.get('#tabledatacard0-title')
     .first()
     .scrollIntoView()
     .should('be.visible')
@@ -333,7 +333,7 @@ export const addTag = (tag) => {
     .and('be.visible')
     .click();
 
-  cy.get('#tabledatacard0Title')
+    cy.get('#tabledatacard0-title')
     .first()
     .scrollIntoView()
     .should('be.visible')
