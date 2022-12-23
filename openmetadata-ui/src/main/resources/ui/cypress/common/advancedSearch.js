@@ -56,7 +56,7 @@ export const FIELDS = {
     searchCriteriaFirstGroup: 'admin',
     responseValueFirstGroup: `"name":"admin"`,
     searchCriteriaSecondGroup: 'Aaron Singh',
-    responseValueSecondGroup: "Aaron",
+    responseValueSecondGroup: 'aaron_singh2',
   },
   Tags: {
     name: 'Tags',
@@ -241,7 +241,7 @@ export const addOwner = (ownerName) => {
     .and('be.visible')
     .click();
 
-    cy.get('#tabledatacard0-title')
+  cy.get('#tabledatacard0-title')
     .first()
     .scrollIntoView()
     .should('be.visible')
@@ -301,7 +301,7 @@ export const addTier = (tier) => {
     .and('be.visible')
     .click();
 
-    cy.get('#tabledatacard0-title')
+  cy.get('#tabledatacard0-title')
     .first()
     .scrollIntoView()
     .should('be.visible')
@@ -333,7 +333,7 @@ export const addTag = (tag) => {
     .and('be.visible')
     .click();
 
-    cy.get('#tabledatacard0-title')
+  cy.get('#tabledatacard0-title')
     .first()
     .scrollIntoView()
     .should('be.visible')
@@ -470,7 +470,6 @@ export const checkAddGroupWithOperator = (
         .click();
     }
   });
-  cy.log('HERE :', filter_1, response_1, filter_2, response_2);
 
   interceptURL(
     'GET',
@@ -615,4 +614,8 @@ export const checkAddRuleWithOperator = (
     expect(request.url).to.contain(searchCriteria_1);
     expect(resBody).to.not.include(response_2);
   });
+};
+
+export const addRuleWithGroup = () => {
+  searchForField();
 };

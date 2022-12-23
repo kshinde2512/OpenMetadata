@@ -31,7 +31,6 @@ import {
     verifyResponseStatusCode
 } from '../../common/common';
 
-
 import { MYSQL } from '../../constants/service.constants';
 
 const service_name = MYSQL.serviceName;
@@ -244,15 +243,40 @@ describe('Advance search should work properly for Add Rule functionality', () =>
         );
       });
     });
+
+    it('Delete Created Service', () => {
+      deleteCreatedService(
+        MYSQL.database,
+        service_name,
+        API_SERVICE.databaseServices
+      );
+    });
   });
 });
 
-// after(() => {
-//   it('Delete Created Service', () => {
-//     deleteCreatedService(
-//       MYSQL.database,
-//       service_name,
-//       API_SERVICE.databaseServices
-//     );
-//   });
-// });
+describe('Verify advance search results for add group and add rule functionality with operator', () => {
+  beforeEach(() => {
+    cy.login();
+    cy.get('[data-testid="appbar-item-explore"]').and('be.visible').click();
+  });
+
+  Object.values(OPERATOR).forEach((operator) => {
+    it('Verify aadvance search results for add group and add rule functionality with operator ', () => {
+      checkAddRuleWithOperator(
+        CONDITIONS_MUST.equalTo.name,
+        CONDITIONS_MUST_NOT.notEqualTo.name,
+        FIELDS.Column.testid,
+        FIELDS.Column.searchCriteriaFirstGroup,
+        FIELDS.Column.searchCriteriaSecondGroup,
+        0,
+        1,
+        operator.index,
+        CONDITIONS_MUST.equalTo.filter,
+        CONDITIONS_MUST_NOT.notEqualTo.filter,
+        FIELDS.Column.responseValueFirstGroup,
+        FIELDS.Column.responseValueSecondGroup
+      );
+      
+    });
+  });
+});
