@@ -327,12 +327,6 @@ describe('Alerts page should work properly', () => {
       toastNotification('Alerts created successfully.');
       //Verify created alert
       cy.get('table').should('contain', destination.name);
-      cy.get('.ant-table-cell')
-        .should('be.visible')
-        .contains(destination.name)
-        .click();
-
-      cy.get('.ant-row').should('contain', destination.locator);
     });
   });
 });
