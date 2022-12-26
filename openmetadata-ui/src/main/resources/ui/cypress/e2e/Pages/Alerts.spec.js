@@ -11,7 +11,10 @@
  *  limitations under the License.
  */
 import {
-    interceptURL, toastNotification, uuid, verifyResponseStatusCode
+    interceptURL,
+    toastNotification,
+    uuid,
+    verifyResponseStatusCode
 } from '../../common/common';
 
 import { DELETE_TERM } from '../../constants/constants';
@@ -186,7 +189,7 @@ describe('Alerts page should work properly', () => {
     cy.get('table').should('contain', ALERTS.name);
   });
 
-  it.only('Create new alert for Test case data asset', () => {
+  it('Create new alert for Test case data asset', () => {
     interceptURL('GET', '/api/v1/alerts/*', 'createAlert');
     //Click on create alert button
     cy.get('button').contains('Create alert').should('be.visible').click();
