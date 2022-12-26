@@ -47,7 +47,7 @@ describe('Alerts page should work properly', () => {
   });
 
   it('Create new alert for all data assets', () => {
-    interceptURL('GET', '/api/v1/alerts/*', 'createAlert');
+    interceptURL('POST', '/api/v1/alerts', 'createAlert');
     //Click on create alert button
     cy.get('button').contains('Create alert').should('be.visible').click();
     verifyResponseStatusCode('@createAlert', 200);
@@ -90,6 +90,7 @@ describe('Alerts page should work properly', () => {
       .type('testuser@openmetadata.org');
     //Click save
     cy.get('[type="submit"]').contains('Save').click();
+    verifyResponseStatusCode('@createAlert', 201);
     toastNotification('Alerts created successfully.');
     cy.get('table').should('contain', alertForAllAssets);
   });
