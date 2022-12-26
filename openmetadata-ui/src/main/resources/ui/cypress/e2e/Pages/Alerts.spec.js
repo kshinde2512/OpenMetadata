@@ -29,6 +29,27 @@ const TEST_CASE = {
   filters: 'Test Results === Failed',
 };
 
+const DESTINATION = {
+  webhook: {
+    name: `webhookAlert-ct-test-${uuid()}`,
+    locator: 'Webhook',
+    description: 'This is webhook description',
+    url: 'http://localhost:8585',
+  },
+  slack: {
+    name: `slackAlert-ct-test-${uuid()}`,
+    locator: 'Slack',
+    description: 'This is slack description',
+    url: 'http://localhost:8585',
+  },
+  msteams: {
+    name: `msteamsAlert-ct-test-${uuid()}`,
+    locator: 'MS Teams',
+    description: 'This is ms teams description',
+    url: 'http://localhost:8585',
+  },
+};
+
 describe('Alerts page should work properly', () => {
   beforeEach(() => {
     cy.login();
@@ -50,7 +71,6 @@ describe('Alerts page should work properly', () => {
     interceptURL('POST', '/api/v1/alerts', 'createAlert');
     //Click on create alert button
     cy.get('button').contains('Create alert').should('be.visible').click();
-    verifyResponseStatusCode('@createAlert', 200);
     //Enter alert name
     cy.get('#name').should('be.visible').type(alertForAllAssets);
     //Enter description
@@ -258,5 +278,61 @@ describe('Alerts page should work properly', () => {
       '.ant-row-middle > :nth-child(2) > :nth-child(1) > :nth-child(1) > :nth-child(3)'
     ).should('contain', TEST_CASE.dataAsset);
     cy.get('div.ant-typography').should('contain', TEST_CASE.filters);
+  });
+
+  Object.values(DESTINATION).forEach((destination) => {
+    it.only(`Create alert for ${destination.locator}`, () => {
+      interceptURL('POST', '/api/v1/alerts', 'createAlert');
+      //Click on create alert button
+      cy.get('button').contains('Create alert').should('be.visible').click();
+      //Enter alert name
+      cy.get('#name').should('be.visible').type(destination.name);
+      //Enter description
+      cy.get('#description').should('be.visible').type(destination.description);
+      //Click on all data assets
+      cy.get('[title="All Data Assets"]').should('be.visible').click();
+      cy.get('[title="All Data Assets"]').eq(1).click();
+      //Select filters
+      cy.get('button').contains('Add Filters').should('exist').click();
+      cy.get('#filteringRules_0_name').invoke('show').click();
+      //Select owner
+      cy.get('[title="Owner"]').should('be.visible').click();
+      cy.get('.ant-select-selection-overflow')
+        .should('be.visible')
+        .click()
+        .type('Engineering');
+      cy.get('[title="Engineering"]').should('be.visible').click();
+      cy.get('#description').should('be.visible').click();
+      //Select include/exclude
+      cy.get('[title="Include"]').should('be.visible').click();
+      cy.get('[title="Include"]').eq(1).click();
+
+      //Select Destination
+      cy.get('button').contains('Add Destination').should('exist').click();
+      cy.get('.ant-select-selection-placeholder')
+        .contains('Select Source')
+        .click({ force: true });
+      cy.wait(1000);
+      cy.get('.ant-select-item-option-content')
+        .contains(destination.locator)
+        .click();
+      cy.wait(500);
+      //Enter url
+      cy.get('#alertActions_0_alertActionConfig_endpoint')
+        .click()
+        .type(destination.url);
+      //Click save
+      cy.get('[type="submit"]').contains('Save').click();
+      verifyResponseStatusCode('@createAlert', 201);
+      toastNotification('Alerts created successfully.');
+      //Verify created alert
+      cy.get('table').should('contain', destination.name);
+      cy.get('.ant-table-cell')
+        .should('be.visible')
+        .contains(destination.name)
+        .click();
+
+      cy.get('.ant-row').should('contain', destination.locator);
+    });
   });
 });
