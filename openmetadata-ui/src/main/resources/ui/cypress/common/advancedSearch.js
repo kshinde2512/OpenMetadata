@@ -1,4 +1,16 @@
 /*
+ *  Copyright 2023 Collate.
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+/*
  *  Copyright 2021 Collate
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -10,14 +22,13 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-import { MYSQL } from '../constants/service.constants';
 import { interceptURL, verifyResponseStatusCode } from './common';
 
 const dropdown_group_1 =
-  '.ant-select-dropdown > :nth-child(1) > :nth-child(1) > .rc-virtual-list > .rc-virtual-list-holder > :nth-child(1) > .rc-virtual-list-holder-inner > .ant-select-item > .ant-select-item-option-content';
+  ':nth-child(6) > :nth-child(1) > .ant-select-dropdown';
 
 const dropdown_group_2 =
-  ':nth-child(7) > :nth-child(1) > .ant-select-dropdown > :nth-child(1) > :nth-child(1) > .rc-virtual-list > .rc-virtual-list-holder > :nth-child(1) > .rc-virtual-list-holder-inner > .ant-select-item';
+  ':nth-child(9) > :nth-child(1) > .ant-select-dropdown';
 
 export const CONDITIONS_MUST = {
   equalTo: {
@@ -175,10 +186,6 @@ export const goToAdvanceSearch = () => {
   //Click on advance search button
   cy.get('[data-testid="advance-search-button"]').should('be.visible').click();
 
-  cy.wait(1000);
-
-  //Click on reset button to reset any previous search activity
-  cy.get('button').contains('Reset').click();
   cy.wait(1000);
 };
 
@@ -345,9 +352,9 @@ export const addTag = (tag) => {
     .click();
 
   cy.wait(500);
-  cy.get('[class*="-control"]').should('be.visible').type(tag);
+  cy.get('[data-testid="tag-selector"]').should('be.visible').click().type(tag);
   cy.wait(500);
-  cy.get('[id*="-option-0"]').should('be.visible').click();
+  cy.get('.ant-select-item-option-content').should('be.visible').click();
   cy.get(
     '[data-testid="tags-wrapper"] > [data-testid="tag-container"]'
   ).contains(tag);
