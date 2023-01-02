@@ -105,7 +105,7 @@ describe('MyData page should work', () => {
     followAndOwnTheEntity(SEARCH_ENTITY_TOPIC.topic_1);
   });
 
-  it.skip('My data, following & feed section should work properly for dashboard entity', () => {
+  it('My data, following & feed section should work properly for dashboard entity', () => {
     followAndOwnTheEntity(SEARCH_ENTITY_DASHBOARD.dashboard_1);
   });
 
@@ -114,7 +114,7 @@ describe('MyData page should work', () => {
   });
 
   
-  it.skip('My data and following section, CTA should work properly', () => {
+  it('My data and following section, CTA should work properly', () => {
     cy.get('[data-testid="my-data-container"]')
       .find('[data-testid*="My data"]')
       .should('have.length', FOLLOWING_MYDATA_COUNT);
