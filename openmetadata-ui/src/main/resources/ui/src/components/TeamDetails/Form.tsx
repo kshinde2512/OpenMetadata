@@ -11,6 +11,8 @@
  *  limitations under the License.
  */
 
+/* eslint-disable @typescript-eslint/ban-types */
+
 import { FormErrorData } from 'Models';
 import React, {
   forwardRef,
@@ -24,7 +26,7 @@ import { Team } from '../../generated/entity/teams/team';
 import { errorMsg } from '../../utils/CommonUtils';
 
 type FormProp = {
-  saveData: (value: {}) => void;
+  saveData: (value: object) => void;
   initialData: Team;
   errorData?: FormErrorData;
 };

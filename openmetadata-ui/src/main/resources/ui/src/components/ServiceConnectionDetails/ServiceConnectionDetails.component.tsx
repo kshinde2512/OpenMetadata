@@ -11,7 +11,8 @@
  *  limitations under the License.
  */
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+/* eslint-disable @typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
 
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
@@ -49,7 +50,10 @@ const ServiceConnectionDetails = ({
   const [schema, setSchema] = useState({});
   const [data, setData] = useState<ReactNode>();
 
-  const getKeyValues = (obj: {}, schemaPropertyObject: {}): ReactNode => {
+  const getKeyValues = (
+    obj: object,
+    schemaPropertyObject: object
+  ): ReactNode => {
     const internalRef = '$ref';
     const oneOf = 'oneOf';
 

@@ -312,10 +312,13 @@ const TaskDetailPage = () => {
   };
 
   const onTaskResolve = () => {
-    const updateTaskData = (data: Record<string, string>) => {
-      updateTask(TaskOperation.RESOLVE, taskDetail.task?.id, data)
+    const updateTaskData = (data: TaskDetails) => {
+      if (!taskDetail.task?.id) {
+        return;
+      }
+      updateTask(TaskOperation.RESOLVE, taskDetail.task?.id + '', data)
         .then(() => {
-          showSuccessToast(t('label.task-resolved-successfully'));
+          showSuccessToast(t('server.task-resolved-successfully'));
           history.push(
             getEntityLink(
               entityType ?? '',
@@ -329,28 +332,28 @@ const TaskDetailPage = () => {
     if (isTaskTags) {
       if (!isEmpty(tagsSuggestion)) {
         const data = { newValue: JSON.stringify(tagsSuggestion || '[]') };
-        updateTaskData(data);
+        updateTaskData(data as TaskDetails);
       } else {
-        showErrorToast(t('label.please-add-tags'));
+        showErrorToast(t('server.please-add-tags'));
       }
     } else {
       if (suggestion) {
         const data = { newValue: suggestion };
-        updateTaskData(data);
+        updateTaskData(data as TaskDetails);
       } else {
-        showErrorToast(t('label.please-add-description'));
+        showErrorToast(t('server.please-add-description'));
       }
     }
   };
 
   const onTaskReject = () => {
-    if (comment) {
+    if (comment && taskDetail.task?.id) {
       setIsLoadingOnSave(true);
-      updateTask(TaskOperation.REJECT, taskDetail.task?.id, {
+      updateTask(TaskOperation.REJECT, taskDetail.task?.id + '', {
         comment,
-      })
+      } as unknown as TaskDetails)
         .then(() => {
-          showSuccessToast(t('label.task-closed-successfully'));
+          showSuccessToast(t('server.task-closed-successfully'));
           setModalVisible(false);
           history.push(
             getEntityLink(
@@ -362,7 +365,7 @@ const TaskDetailPage = () => {
         .catch((err: AxiosError) => showErrorToast(err))
         .finally(() => setIsLoadingOnSave(false));
     } else {
-      showErrorToast(t('label.task-closed-without-comment'));
+      showErrorToast(t('server.task-closed-without-comment'));
     }
   };
 
@@ -571,7 +574,7 @@ const TaskDetailPage = () => {
                         </span>
                       </UserPopOverCard>
                       <span className="tw-ml-1">
-                        {t('label.created-this-task')}
+                        {t('message.created-this-task-lowercase')}
                       </span>
                       <span className="tw-ml-1">
                         {toLower(
@@ -587,7 +590,7 @@ const TaskDetailPage = () => {
                       className={classNames('tw-text-grey-muted', {
                         'tw-self-center tw-mr-2': editAssignee,
                       })}>
-                      {t('label.assignees')}:
+                      {t('label.assignee-plural')}:
                     </span>
                     {editAssignee ? (
                       <Fragment>
