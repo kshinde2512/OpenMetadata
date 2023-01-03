@@ -134,8 +134,8 @@ describe('Advance search should work properly for Add Group functionality', () =
     cy.get('[data-testid="appbar-item-explore"]').and('be.visible').click();
   });
   Object.values(OPERATOR).forEach((operator) => {
-    Object.values(FIELDS).forEach((field) => {
-    it(`Verify Add group functionality for ${field.name} with ${operator.name} operator & condition ${CONDITIONS_MUST.equalTo.name} and ${CONDITIONS_MUST_NOT.notEqualTo.name} `, () => {
+    it(`Verify Add group functionality for All with ${operator.name} operator & condition ${CONDITIONS_MUST.equalTo.name} and ${CONDITIONS_MUST_NOT.notEqualTo.name} `, () => {
+      Object.values(FIELDS).forEach((field) => {
         checkAddGroupWithOperator(
           CONDITIONS_MUST.equalTo.name,
           CONDITIONS_MUST_NOT.notEqualTo.name,
@@ -153,8 +153,8 @@ describe('Advance search should work properly for Add Group functionality', () =
       });
     });
 
-    Object.values(FIELDS).forEach((field) => {
-    it(`Verify Add group functionality for ${field.name} with ${operator.name} operator & condition ${CONDITIONS_MUST.anyIn.name} and ${CONDITIONS_MUST_NOT.notIn.name} `, () => {
+    it(`Verify Add group functionality for All with ${operator.name} operator & condition ${CONDITIONS_MUST.anyIn.name} and ${CONDITIONS_MUST_NOT.notIn.name} `, () => {
+      Object.values(FIELDS).forEach((field) => {
         checkAddGroupWithOperator(
           CONDITIONS_MUST.anyIn.name,
           CONDITIONS_MUST_NOT.notIn.name,
@@ -172,8 +172,8 @@ describe('Advance search should work properly for Add Group functionality', () =
       });
     });
 
-    Object.values(FIELDS).forEach((field) => {
-    it(`Verify Add group functionality for ${field.name} with ${operator.name} operator & condition ${CONDITIONS_MUST.contains.name} and ${CONDITIONS_MUST_NOT.notContains.name} `, () => {
+    it(`Verify Add group functionality for All with ${operator.name} operator & condition ${CONDITIONS_MUST.contains.name} and ${CONDITIONS_MUST_NOT.notContains.name} `, () => {
+      Object.values(FIELDS).forEach((field) => {
         checkAddGroupWithOperator(
           CONDITIONS_MUST.contains.name,
           CONDITIONS_MUST_NOT.notContains.name,
@@ -199,8 +199,8 @@ describe('Advance search should work properly for Add Rule functionality', () =>
     cy.get('[data-testid="appbar-item-explore"]').and('be.visible').click();
   });
   Object.values(OPERATOR).forEach((operator) => {
-    Object.values(FIELDS).forEach((field) => {
-    it(`Verify Add Rule functionality for ${field.name} with ${operator.name} operator & condition ${CONDITIONS_MUST.equalTo.name} and ${CONDITIONS_MUST_NOT.notEqualTo.name} `, () => {
+    it(`Verify Add Rule functionality for All with ${operator.name} operator & condition ${CONDITIONS_MUST.equalTo.name} and ${CONDITIONS_MUST_NOT.notEqualTo.name} `, () => {
+      Object.values(FIELDS).forEach((field) => {
         checkAddRuleWithOperator(
           CONDITIONS_MUST.equalTo.name,
           CONDITIONS_MUST_NOT.notEqualTo.name,
@@ -218,8 +218,8 @@ describe('Advance search should work properly for Add Rule functionality', () =>
       });
     });
 
-    Object.values(FIELDS).forEach((field) => {
-    it(`Verify Add Rule functionality for ${field.name} with ${operator.name} operator & condition ${CONDITIONS_MUST.anyIn.name} and ${CONDITIONS_MUST_NOT.notIn.name} `, () => {
+    it(`Verify Add Rule functionality for All with ${operator.name} operator & condition ${CONDITIONS_MUST.anyIn.name} and ${CONDITIONS_MUST_NOT.notIn.name} `, () => {
+      Object.values(FIELDS).forEach((field) => {
         checkAddRuleWithOperator(
           CONDITIONS_MUST.anyIn.name,
           CONDITIONS_MUST_NOT.notIn.name,
@@ -237,8 +237,8 @@ describe('Advance search should work properly for Add Rule functionality', () =>
       });
     });
 
-    Object.values(FIELDS).forEach((field) => {
-    it(`Verify Add Rule functionality for ${field.name} with ${operator.name} operator & condition ${CONDITIONS_MUST.contains.name} and ${CONDITIONS_MUST_NOT.notContains.name} `, () => {
+    it(`Verify Add Rule functionality for All with ${operator.name} operator & condition ${CONDITIONS_MUST.contains.name} and ${CONDITIONS_MUST_NOT.notContains.name} `, () => {
+      Object.values(FIELDS).forEach((field) => {
         checkAddRuleWithOperator(
           CONDITIONS_MUST.contains.name,
           CONDITIONS_MUST_NOT.notContains.name,
