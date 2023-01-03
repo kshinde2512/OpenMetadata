@@ -16,7 +16,7 @@
 import { followAndOwnTheEntity, interceptURL, searchEntity, visitEntityDetailsPage } from '../../common/common';
 import { ENTITIES, FOLLOWING_TITLE, MYDATA_SUMMARY_OPTIONS, MY_DATA_TITLE, NO_SEARCHED_TERMS, RECENT_SEARCH_TITLE, RECENT_VIEW_TITLE, SEARCH_ENTITY_DASHBOARD, SEARCH_ENTITY_PIPELINE, SEARCH_ENTITY_TABLE, SEARCH_ENTITY_TOPIC } from '../../constants/constants';
 
-const FOLLOWING_MYDATA_COUNT = 3;
+const FOLLOWING_MYDATA_COUNT = 4;
 
 describe('MyData page should work', () => {
   beforeEach(() => {
