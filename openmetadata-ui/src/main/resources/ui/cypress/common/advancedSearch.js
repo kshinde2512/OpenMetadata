@@ -25,12 +25,6 @@
 import { MYSQL } from '../constants/service.constants';
 import { interceptURL, verifyResponseStatusCode } from './common';
 
-const dropdown_group_1 =
-  ':nth-child(6) > :nth-child(1) > .ant-select-dropdown';
-
-const dropdown_group_2 =
-  ':nth-child(9) > :nth-child(1) > .ant-select-dropdown';
-
 export const CONDITIONS_MUST = {
   equalTo: {
     name: '==',
@@ -68,6 +62,7 @@ export const FIELDS = {
     searchCriteriaFirstGroup: 'admin',
     responseValueFirstGroup: `"name":"admin"`,
     searchCriteriaSecondGroup: 'Aaron Singh',
+    owner: true,
     responseValueSecondGroup: 'aaron_singh2',
   },
   Tags: {
@@ -164,8 +159,8 @@ export const searchForField = (condition, fieldid, searchCriteria, index) => {
   cy.wait(1000);
   //if condition has a dropdown then select value from dropdown
   cy.get('body').then(($body) => {
-    if ($body.find(dropdown_group_1).length) {
-      cy.get(`[title='${searchCriteria}']`)
+    if ($body.find(`.ant-select-dropdown [title="${searchCriteria}"]`).length) {
+      cy.get(`[title = '${searchCriteria}']`)
         .should('be.visible')
         .trigger('mouseover')
         .trigger('click');
@@ -380,6 +375,7 @@ export const checkAddGroupWithOperator = (
   response_1,
   response_2
 ) => {
+  cy.log('Check Here' + searchCriteria_2 + response_2);
   goToAdvanceSearch();
   //Click on field dropdown
   cy.get('.rule--field').eq(index_1).should('be.visible').click();
@@ -413,7 +409,9 @@ export const checkAddGroupWithOperator = (
   cy.wait(1000);
   //if condition has a dropdown then select value from dropdown
   cy.get('body').then(($body) => {
-    if ($body.find(dropdown_group_1).length) {
+    if (
+      $body.find(`.ant-select-dropdown [title="${searchCriteria_1}"]`).length
+    ) {
       cy.get(`[title = '${searchCriteria_1}']`)
         .should('be.visible')
         .trigger('mouseover')
@@ -465,14 +463,16 @@ export const checkAddGroupWithOperator = (
   //if condition has a dropdown then select value from dropdown
   cy.get('body').then(($body) => {
     if (
-      $body.find(dropdown_group_2).length &&
+      $body.find(`.ant-select-dropdown [title="${searchCriteria_2}"]`).length &&
       searchCriteria_2 === 'Tier.Tier2'
     ) {
       cy.get(`[title = "${searchCriteria_2}"]`)
         .eq(1)
         .contains(searchCriteria_2)
         .click({ force: true });
-    } else if ($body.find(dropdown_group_2).length) {
+    } else if (
+      $body.find(`.ant-select-dropdown [title="${searchCriteria_2}"]`).length
+    ) {
       cy.get(`[title = "${searchCriteria_2}"]`)
         .contains(searchCriteria_2)
         .click();
@@ -481,7 +481,7 @@ export const checkAddGroupWithOperator = (
 
   interceptURL(
     'GET',
-    `/api/v1/search/query?q=&index=*&from=0&size=10&deleted=false&query_filter=*${filter_1}*${searchCriteria_1}*${filter_2}*${searchCriteria_2}*&sort_field=_score&sort_order=desc`,
+    `/api/v1/search/query?q=&index=*&from=0&size=10&deleted=false&query_filter=*${filter_1}*${searchCriteria_1}*${filter_2}*${response_2}*&sort_field=_score&sort_order=desc`,
     'search'
   );
 
@@ -542,7 +542,9 @@ export const checkAddRuleWithOperator = (
   cy.wait(1000);
   //if condition has a dropdown then select value from dropdown
   cy.get('body').then(($body) => {
-    if ($body.find(dropdown_group_1).length) {
+    if (
+      $body.find(`.ant-select-dropdown [title="${searchCriteria_1}"]`).length
+    ) {
       cy.get(`[title = '${searchCriteria_1}']`)
         .should('be.visible')
         .trigger('mouseover')
@@ -594,14 +596,16 @@ export const checkAddRuleWithOperator = (
   //if condition has a dropdown then select value from dropdown
   cy.get('body').then(($body) => {
     if (
-      $body.find(dropdown_group_2).length &&
+      $body.find(`.ant-select-dropdown [title="${searchCriteria_2}"]`).length &&
       searchCriteria_2 === 'Tier.Tier2'
     ) {
       cy.get(`[title = "${searchCriteria_2}"]`)
         .eq(1)
         .contains(searchCriteria_2)
         .click({ force: true });
-    } else if ($body.find(dropdown_group_2).length) {
+    } else if (
+      $body.find(`.ant-select-dropdown [title="${searchCriteria_2}"]`).length
+    ) {
       cy.get(`[title = "${searchCriteria_2}"]`)
         .contains(searchCriteria_2)
         .click();

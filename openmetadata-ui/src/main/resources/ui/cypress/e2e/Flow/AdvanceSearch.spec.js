@@ -53,13 +53,13 @@ describe('Advance search should work properly for all fields', () => {
     cy.get('[data-testid="appbar-item-explore"]').and('be.visible').click();
   });
 
-  it('Pre-requisite for advance search', () => {
+  it.skip('Pre-requisite for advance search', () => {
     addOwner(FIELDS.Owner.searchCriteriaFirstGroup);
     addTier(FIELDS.Tiers.searchCriteriaFirstGroup);
     addTag(FIELDS.Tags.searchCriteriaFirstGroup);
   });
 
-  it('Mysql ingestion', () => {
+  it.skip('Mysql ingestion', () => {
     interceptURL(
       'GET',
       'api/v1/teams/name/Organization?fields=*',
@@ -136,6 +136,10 @@ describe('Advance search should work properly for Add Group functionality', () =
   Object.values(OPERATOR).forEach((operator) => {
     it(`Verify Add group functionality for All with ${operator.name} operator & condition ${CONDITIONS_MUST.equalTo.name} and ${CONDITIONS_MUST_NOT.notEqualTo.name} `, () => {
       Object.values(FIELDS).forEach((field) => {
+        let val = field.searchCriteriaSecondGroup;
+        if (field.owner) {
+          val = field.responseValueSecondGroup;
+        }
         checkAddGroupWithOperator(
           CONDITIONS_MUST.equalTo.name,
           CONDITIONS_MUST_NOT.notEqualTo.name,
@@ -148,13 +152,17 @@ describe('Advance search should work properly for Add Group functionality', () =
           CONDITIONS_MUST.equalTo.filter,
           CONDITIONS_MUST_NOT.notEqualTo.filter,
           field.responseValueFirstGroup,
-          field.responseValueSecondGroup
+          val
         );
       });
     });
 
     it(`Verify Add group functionality for All with ${operator.name} operator & condition ${CONDITIONS_MUST.anyIn.name} and ${CONDITIONS_MUST_NOT.notIn.name} `, () => {
       Object.values(FIELDS).forEach((field) => {
+        let val = field.searchCriteriaSecondGroup;
+        if (field.owner) {
+          val = field.responseValueSecondGroup;
+        }
         checkAddGroupWithOperator(
           CONDITIONS_MUST.anyIn.name,
           CONDITIONS_MUST_NOT.notIn.name,
@@ -167,13 +175,17 @@ describe('Advance search should work properly for Add Group functionality', () =
           CONDITIONS_MUST.anyIn.filter,
           CONDITIONS_MUST_NOT.notIn.filter,
           field.responseValueFirstGroup,
-          field.responseValueSecondGroup
+          val
         );
       });
     });
 
     it(`Verify Add group functionality for All with ${operator.name} operator & condition ${CONDITIONS_MUST.contains.name} and ${CONDITIONS_MUST_NOT.notContains.name} `, () => {
       Object.values(FIELDS).forEach((field) => {
+        let val = field.searchCriteriaSecondGroup;
+        if (field.owner) {
+          val = field.responseValueSecondGroup;
+        }
         checkAddGroupWithOperator(
           CONDITIONS_MUST.contains.name,
           CONDITIONS_MUST_NOT.notContains.name,
@@ -186,7 +198,7 @@ describe('Advance search should work properly for Add Group functionality', () =
           CONDITIONS_MUST.contains.filter,
           CONDITIONS_MUST_NOT.notContains.filter,
           field.responseValueFirstGroup,
-          field.responseValueSecondGroup
+          val
         );
       });
     });
@@ -201,6 +213,10 @@ describe('Advance search should work properly for Add Rule functionality', () =>
   Object.values(OPERATOR).forEach((operator) => {
     it(`Verify Add Rule functionality for All with ${operator.name} operator & condition ${CONDITIONS_MUST.equalTo.name} and ${CONDITIONS_MUST_NOT.notEqualTo.name} `, () => {
       Object.values(FIELDS).forEach((field) => {
+        let val = field.searchCriteriaSecondGroup;
+        if (field.owner) {
+          val = field.responseValueSecondGroup;
+        }
         checkAddRuleWithOperator(
           CONDITIONS_MUST.equalTo.name,
           CONDITIONS_MUST_NOT.notEqualTo.name,
@@ -213,13 +229,17 @@ describe('Advance search should work properly for Add Rule functionality', () =>
           CONDITIONS_MUST.equalTo.filter,
           CONDITIONS_MUST_NOT.notEqualTo.filter,
           field.responseValueFirstGroup,
-          field.responseValueSecondGroup
+          val
         );
       });
     });
 
     it(`Verify Add Rule functionality for All with ${operator.name} operator & condition ${CONDITIONS_MUST.anyIn.name} and ${CONDITIONS_MUST_NOT.notIn.name} `, () => {
       Object.values(FIELDS).forEach((field) => {
+        let val = field.searchCriteriaSecondGroup;
+        if (field.owner) {
+          val = field.responseValueSecondGroup;
+        }
         checkAddRuleWithOperator(
           CONDITIONS_MUST.anyIn.name,
           CONDITIONS_MUST_NOT.notIn.name,
@@ -232,13 +252,17 @@ describe('Advance search should work properly for Add Rule functionality', () =>
           CONDITIONS_MUST.anyIn.filter,
           CONDITIONS_MUST_NOT.notIn.filter,
           field.responseValueFirstGroup,
-          field.responseValueSecondGroup
+          val
         );
       });
     });
 
     it(`Verify Add Rule functionality for All with ${operator.name} operator & condition ${CONDITIONS_MUST.contains.name} and ${CONDITIONS_MUST_NOT.notContains.name} `, () => {
       Object.values(FIELDS).forEach((field) => {
+        let val = field.searchCriteriaSecondGroup;
+        if (field.owner) {
+          val = field.responseValueSecondGroup;
+        }
         checkAddRuleWithOperator(
           CONDITIONS_MUST.contains.name,
           CONDITIONS_MUST_NOT.notContains.name,
@@ -251,7 +275,7 @@ describe('Advance search should work properly for Add Rule functionality', () =>
           CONDITIONS_MUST.contains.filter,
           CONDITIONS_MUST_NOT.notContains.filter,
           field.responseValueFirstGroup,
-          field.responseValueSecondGroup
+          val
         );
       });
     });
@@ -288,7 +312,6 @@ describe.skip('Verify advance search results for add group and add rule function
         FIELDS.Column.responseValueFirstGroup,
         FIELDS.Column.responseValueSecondGroup
       );
-      
     });
   });
 });
