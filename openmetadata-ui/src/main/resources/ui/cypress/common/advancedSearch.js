@@ -363,14 +363,19 @@ export const checkAddGroupWithOperator = (
   response_1,
   response_2
 ) => {
-  cy.log('Check Here' + searchCriteria_2 + response_2);
   goToAdvanceSearch();
   //Click on field dropdown
-  cy.get('.rule--field').eq(index_1).should('be.visible').click();
+  cy.get('.rule--field > .ant-select > .ant-select-selector')
+    .eq(index_1)
+    .should('be.visible')
+    .click();
   //Select owner fields
   cy.get(fieldid).eq(0).should('be.visible').click();
   //Select the condition
-  cy.get('.rule--operator').eq(index_1).should('be.visible').click();
+  cy.get('.rule--operator > .ant-select > .ant-select-selector')
+    .eq(index_1)
+    .should('be.visible')
+    .click();
 
   cy.get(`[label="${condition_1}"]`).eq(index_1).should('be.visible').click();
   //Verify the condition
@@ -614,8 +619,4 @@ export const checkAddRuleWithOperator = (
     expect(request.url).to.contain(searchCriteria_1);
     expect(resBody).to.not.include(response_2);
   });
-};
-
-export const addRuleWithGroup = () => {
-  searchForField();
 };
