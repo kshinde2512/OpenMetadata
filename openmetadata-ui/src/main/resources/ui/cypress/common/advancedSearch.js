@@ -80,10 +80,10 @@ export const FIELDS = {
   Database: {
     name: 'Database',
     testid: '[title="Database"]',
-    searchCriteriaFirstGroup: 'ecommerce_db',
-    responseValueFirstGroup: `"name":"ecommerce_db"`,
-    searchCriteriaSecondGroup: 'default',
-    responseValueSecondGroup: `"name":"default"`,
+    searchCriteriaFirstGroup: 'default',
+    responseValueFirstGroup: `"name":"default"`,
+    searchCriteriaSecondGroup: 'ecommerce_db',
+    responseValueSecondGroup: `"name":"ecommerce_db"`,
   },
   Database_Schema: {
     name: 'Database Schema',
@@ -116,11 +116,11 @@ export const OPERATOR = {
 
 export const searchForField = (condition, fieldid, searchCriteria, index) => {
   //Click on field dropdown
-  cy.get('.rule--field').eq(index).should('be.visible').click();
+  cy.get('.rule--field > .ant-select > .ant-select-selector').eq(index).should('be.visible').click();
   //Select owner fields
   cy.get(`${fieldid}`).eq(index).should('be.visible').click();
   //Select the condition
-  cy.get('.rule--operator').eq(index).should('be.visible').click();
+  cy.get('.rule--operator > .ant-select > .ant-select-selector').eq(index).should('be.visible').click();
 
   cy.get(`[title="${condition}"]`).eq(index).should('be.visible').click();
   //Verify the condition
